@@ -9,10 +9,11 @@
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; }
         .calendar-container iframe { width: 100%; height: 500px; border: 0; border-radius: 0.75rem; filter: invert(90%) hue-rotate(180deg); }
-        /* Custom range slider styling */
         input[type=range] { -webkit-appearance: none; background: transparent; }
         input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; height: 16px; width: 16px; border-radius: 50%; background: #818cf8; cursor: pointer; margin-top: -6px; }
         input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 4px; cursor: pointer; background: #334155; border-radius: 2px; }
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col">
@@ -89,11 +90,12 @@
         <div class="lg:col-span-3 space-y-6">
             
             <!-- View Selector Tabs -->
-            <div class="flex space-x-2 border-b border-slate-800 pb-3 overflow-x-auto">
-                <button onclick="switchTab('daily')" id="tab-daily" class="px-4 py-2 bg-indigo-600 text-white rounded-xl text-xs font-semibold shadow-lg shadow-indigo-600/20 transition whitespace-nowrap">Adapted Daily Plan</button>
-                <button onclick="switchTab('subjects')" id="tab-subjects" class="px-4 py-2 bg-slate-900 text-slate-400 hover:text-white rounded-xl text-xs font-semibold transition whitespace-nowrap">📚 Subject Tracker</button>
-                <button onclick="switchTab('phases')" id="tab-phases" class="px-4 py-2 bg-slate-900 text-slate-400 hover:text-white rounded-xl text-xs font-semibold transition whitespace-nowrap">🎯 Macro Phases</button>
-                <button onclick="switchTab('calendar')" id="tab-calendar" class="px-4 py-2 bg-slate-900 text-slate-400 hover:text-white rounded-xl text-xs font-semibold transition whitespace-nowrap">📅 Live PHC Sync</button>
+            <div class="flex space-x-2 border-b border-slate-800 pb-3 overflow-x-auto scrollbar-hide">
+                <button onclick="switchTab('daily')" id="tab-daily" class="px-4 py-2 bg-indigo-600 text-white rounded-xl text-xs font-semibold shadow-lg shadow-indigo-600/20 transition whitespace-nowrap">Daily Plan</button>
+                <button onclick="switchTab('weekly')" id="tab-weekly" class="px-4 py-2 bg-slate-900 text-slate-400 hover:text-white rounded-xl text-xs font-semibold transition whitespace-nowrap">🗓️ Weekly Plan</button>
+                <button onclick="switchTab('phases')" id="tab-phases" class="px-4 py-2 bg-slate-900 text-slate-400 hover:text-white rounded-xl text-xs font-semibold transition whitespace-nowrap">🎯 Monthly & Phases</button>
+                <button onclick="switchTab('subjects')" id="tab-subjects" class="px-4 py-2 bg-slate-900 text-slate-400 hover:text-white rounded-xl text-xs font-semibold transition whitespace-nowrap">📚 Subjects</button>
+                <button onclick="switchTab('calendar')" id="tab-calendar" class="px-4 py-2 bg-slate-900 text-slate-400 hover:text-white rounded-xl text-xs font-semibold transition whitespace-nowrap">📅 Calendar</button>
             </div>
 
             <!-- Daily View Panel -->
@@ -107,63 +109,79 @@
                 </div>
             </div>
 
+            <!-- Weekly View Panel -->
+            <div id="panel-weekly" class="space-y-4 hidden">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-lg font-bold">Weekly Subject Strategy</h2>
+                    <span class="text-xs text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1 rounded-lg">Auto-saves text</span>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-3 shadow-xl">
+                        <span class="text-xs text-indigo-400 font-bold uppercase tracking-wider">Current Week Target</span>
+                        <input id="wCT" oninput="saveTextData()" type="text" placeholder="e.g., Med + Pharma" class="w-full bg-transparent border-b border-slate-700 text-base font-bold text-white focus:outline-none focus:border-indigo-500 pb-1 mb-2">
+                        <p class="text-xs text-slate-400">List this week's goals below:</p>
+                        <textarea id="wCTasks" oninput="saveTextData()" rows="4" placeholder="- Finish Medicine QBank&#10;- BTR Pharma Notes&#10;- 1 Grand Test" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-3 text-sm text-slate-200 focus:outline-none focus:border-indigo-500"></textarea>
+                    </div>
+                    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-3 shadow-xl opacity-80">
+                        <span class="text-xs text-slate-500 font-bold uppercase tracking-wider">Next Week Forecast</span>
+                        <input id="wNT" oninput="saveTextData()" type="text" placeholder="e.g., Surgery + Anatomy" class="w-full bg-transparent border-b border-slate-700 text-base font-bold text-white focus:outline-none focus:border-slate-500 pb-1 mb-2">
+                        <p class="text-xs text-slate-400">Plan ahead to maintain flow:</p>
+                        <textarea id="wNTasks" oninput="saveTextData()" rows="4" placeholder="- Start Surgery RR&#10;- Anatomy PYQs" class="w-full bg-slate-800/50 border border-slate-700 rounded-lg p-3 text-sm text-slate-200 focus:outline-none focus:border-slate-500"></textarea>
+                    </div>
+                </div>
+            </div>
+
             <!-- Subject Tracker Panel -->
             <div id="panel-subjects" class="space-y-4 hidden">
                 <div class="flex items-center justify-between">
                     <h2 class="text-lg font-bold">19 Subjects Master Checklist</h2>
                     <span class="text-xs text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1 rounded-lg">Auto-saves to device</span>
                 </div>
-                
-                <!-- Dynamic Subject Grid rendered via JS -->
                 <div id="subjectGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
             </div>
 
-            <!-- Interactive Macro Phases Panel -->
+            <!-- Interactive Macro Phases & Monthly Panel -->
             <div id="panel-phases" class="space-y-4 hidden">
                 <div class="flex items-center justify-between">
-                    <h2 class="text-lg font-bold">Preparation Phases & Roadmaps</h2>
-                    <span class="text-xs text-indigo-400 bg-indigo-500/10 border border-indigo-500/20 px-3 py-1 rounded-lg">Tap a phase to view plan details</span>
+                    <h2 class="text-lg font-bold">Monthly Goals & Macro Phases</h2>
+                    <span class="text-xs text-indigo-400 bg-indigo-500/10 border border-indigo-500/20 px-3 py-1 rounded-lg">Tap a phase to view details</span>
                 </div>
 
+                <!-- Monthly Goals Section -->
+                <div class="bg-gradient-to-r from-indigo-900/40 to-slate-900 border border-indigo-500/30 rounded-2xl p-5 space-y-3 mb-6 shadow-xl">
+                    <h3 class="font-bold text-sm text-indigo-300 uppercase tracking-wider border-b border-indigo-500/20 pb-2">Current Month's Major Milestones</h3>
+                    <div class="flex flex-col space-y-2 pt-1">
+                        <label class="flex items-center space-x-3 cursor-pointer">
+                            <input id="mG1C" onchange="saveTextData()" type="checkbox" class="h-5 w-5 rounded border-slate-700 bg-slate-800 text-indigo-600 focus:ring-indigo-500">
+                            <input id="mG1T" oninput="saveTextData()" type="text" placeholder="Type a monthly goal (e.g., Complete 30% of Medicine Q-Bank)" class="flex-1 bg-transparent border-none text-sm text-white focus:outline-none focus:ring-0">
+                        </label>
+                        <label class="flex items-center space-x-3 cursor-pointer">
+                            <input id="mG2C" onchange="saveTextData()" type="checkbox" class="h-5 w-5 rounded border-slate-700 bg-slate-800 text-indigo-600 focus:ring-indigo-500">
+                            <input id="mG2T" oninput="saveTextData()" type="text" placeholder="Type a monthly goal (e.g., Take 2 Grand Tests)" class="flex-1 bg-transparent border-none text-sm text-white focus:outline-none focus:ring-0">
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Phase Cards Grid -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <!-- Phase 1 -->
                     <div onclick="selectPhase(1)" id="phaseCard-1" class="bg-slate-900 border-2 border-indigo-500 rounded-2xl p-5 space-y-3 cursor-pointer transition shadow-xl">
-                        <div class="flex justify-between items-center">
-                            <span class="text-xs bg-indigo-500/20 text-indigo-300 px-2.5 py-1 rounded-lg font-bold">Phase 1 • Active</span>
-                            <span class="text-xs text-slate-400">Target: INI-Nov '26</span>
-                        </div>
+                        <div class="flex justify-between items-center"><span class="text-xs bg-indigo-500/20 text-indigo-300 px-2.5 py-1 rounded-lg font-bold">Phase 1 • Active</span><span class="text-xs text-slate-400">Target: INI-Nov '26</span></div>
                         <h3 class="font-bold text-base">Core Clinical First Pass</h3>
                     </div>
-
-                    <!-- Phase 2 -->
                     <div onclick="selectPhase(2)" id="phaseCard-2" class="bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-2xl p-5 space-y-3 cursor-pointer transition shadow-xl">
-                        <div class="flex justify-between items-center">
-                            <span class="text-xs bg-slate-800 text-slate-400 px-2.5 py-1 rounded-lg font-bold">Phase 2 • Upcoming</span>
-                            <span class="text-xs text-slate-400">Sep - Oct '26</span>
-                        </div>
+                        <div class="flex justify-between items-center"><span class="text-xs bg-slate-800 text-slate-400 px-2.5 py-1 rounded-lg font-bold">Phase 2 • Upcoming</span><span class="text-xs text-slate-400">Sep - Oct '26</span></div>
                         <h3 class="font-bold text-base">Rapid Revision & INI Blitz</h3>
                     </div>
-
-                    <!-- Phase 3 -->
                     <div onclick="selectPhase(3)" id="phaseCard-3" class="bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-2xl p-5 space-y-3 cursor-pointer transition shadow-xl">
-                        <div class="flex justify-between items-center">
-                            <span class="text-xs bg-slate-800 text-slate-400 px-2.5 py-1 rounded-lg font-bold">Phase 3 • Future</span>
-                            <span class="text-xs text-slate-400">Dec '26 - Apr '27</span>
-                        </div>
+                        <div class="flex justify-between items-center"><span class="text-xs bg-slate-800 text-slate-400 px-2.5 py-1 rounded-lg font-bold">Phase 3 • Future</span><span class="text-xs text-slate-400">Dec '26 - Apr '27</span></div>
                         <h3 class="font-bold text-base">INI-May '27 & NEET-PG '27</h3>
                     </div>
-
-                    <!-- Phase 4 -->
                     <div onclick="selectPhase(4)" id="phaseCard-4" class="bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-2xl p-5 space-y-3 cursor-pointer transition shadow-xl">
-                        <div class="flex justify-between items-center">
-                            <span class="text-xs bg-slate-800 text-slate-400 px-2.5 py-1 rounded-lg font-bold">Phase 4 • Final Sprint</span>
-                            <span class="text-xs text-slate-400">May '27 Onwards</span>
-                        </div>
+                        <div class="flex justify-between items-center"><span class="text-xs bg-slate-800 text-slate-400 px-2.5 py-1 rounded-lg font-bold">Phase 4 • Final Sprint</span><span class="text-xs text-slate-400">May '27 Onwards</span></div>
                         <h3 class="font-bold text-base">Final Grand Tests Blitz</h3>
                     </div>
                 </div>
 
-                <!-- Detailed Phase View Box -->
                 <div id="phaseDetailBox" class="bg-slate-900 border border-indigo-500/30 rounded-2xl p-5 space-y-3 mt-4">
                     <h3 id="phaseDetailTitle" class="font-bold text-base text-indigo-300">Phase 1: Core Clinical & High-Yield First Pass (Current -> Aug '26)</h3>
                     <p id="phaseDetailDesc" class="text-sm text-slate-300 leading-relaxed">Focus on Major Clinical subjects (Medicine, Surgery, OBG, Pediatrics) paired with Pre-clinical links. Build strong notes and complete first-pass Q-Bank modules ahead of INI-Nov 2026. GT Frequency: 1 every 3-4 weeks.</p>
@@ -176,7 +194,7 @@
                     <h2 class="text-lg font-bold">BMO Shift Schedule</h2>
                 </div>
                 <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 calendar-container">
-                    <iframe src="https://calendar.google.com/calendar/embed?src=2a43860ddbb18d8d9a54351a39897c2156aea1c5359de87c47b516b9e2a6a6a7%40group.calendar.google.com&ctz=Asia%2FKolkata" style="border: 0" width="800" height="600" frameborder="0" scrolling="no"></iframe>
+                   <iframe src="https://calendar.google.com/calendar/embed?src=2a43860ddbb18d8d9a54351a39897c2156aea1c5359de87c47b516b9e2a6a6a7%40group.calendar.google.com&ctz=Asia%2FKolkata" style="border: 0" width="800" height="600" frameborder="0" scrolling="no"></iframe>
                 </div>
             </div>
 
@@ -184,12 +202,12 @@
     </main>
 
     <script>
-        // --- 1. DAILY PLAN LOGIC ---
+        // --- 1. DAILY PLAN LOGIC & SAFE COLORS ---
         const plans = {
-            morning: { label: "Morning Shift (9 AM - 3 PM)", title: "Morning Shift Plan", tasks: [{ title: "Morning Review", sub: "Deep Focus", tag: "Study", color: "indigo" }, { title: "PHC Duty", sub: "9 AM - 3 PM", tag: "Duty", color: "amber" }] },
-            night: { label: "Night Duty (3 PM - 9 AM)", title: "Night Duty Plan", tasks: [{ title: "PHC Night Duty", sub: "3 PM - 9 AM Next Day", tag: "Duty", color: "amber" }, { title: "Rest & Recovery", sub: "Mandatory", tag: "Rest", color: "emerald" }] },
-            post: { label: "Post-Duty Off", title: "Post-Duty Off Plan", tasks: [{ title: "Mandatory Sleep", sub: "Until 2 PM", tag: "Rest", color: "emerald" }, { title: "Afternoon Q-Bank", sub: "Low stress", tag: "Q-Bank", color: "blue" }] },
-            weekoff: { label: "Full Week Off", title: "Week Off Sprint Plan", tasks: [{ title: "Grand Test", sub: "3-hour block", tag: "GT", color: "indigo" }, { title: "Core Subject Deep Dive", sub: "Evening", tag: "Focus", color: "purple" }] }
+            morning: { label: "Morning Shift (9 AM - 3 PM)", title: "Morning Shift Plan", tasks: [{ title: "Morning Review", sub: "Deep Focus", tag: "Study", color: "indigo" }, { title: "PHC Duty", sub: "9 AM - 3 PM", tag: "Duty", color: "amber" }, { title: "Evening Q-Bank", sub: "Error Notebook", tag: "Q-Bank", color: "blue" }] },
+            night: { label: "Night Duty (3 PM - 9 AM)", title: "Night Duty Plan", tasks: [{ title: "Pre-Night Prep", sub: "Audio/Video Notes", tag: "Prep", color: "blue" }, { title: "PHC Night Duty", sub: "3 PM - 9 AM Next Day", tag: "Duty", color: "amber" }, { title: "Rest & Recovery", sub: "Mandatory", tag: "Rest", color: "emerald" }] },
+            post: { label: "Post-Duty Off", title: "Post-Duty Off Plan", tasks: [{ title: "Mandatory Sleep", sub: "Until 2 PM", tag: "Rest", color: "emerald" }, { title: "Afternoon Q-Bank", sub: "Low stress", tag: "Q-Bank", color: "blue" }, { title: "Evening Flashcards", sub: "Catchup", tag: "Revision", color: "purple" }] },
+            weekoff: { label: "Full Week Off", title: "Week Off Sprint Plan", tasks: [{ title: "Grand Test", sub: "3-hour block", tag: "GT", color: "indigo" }, { title: "Test Analysis", sub: "Review Errors", tag: "Review", color: "amber" }, { title: "Core Subject Deep Dive", sub: "Evening", tag: "Focus", color: "purple" }] }
         };
 
         function setShift(type) {
@@ -204,91 +222,100 @@
             document.getElementById('currentShiftLabel').innerText = current.label;
             document.getElementById('planTitle').innerText = current.title;
             
-            document.getElementById('taskList').innerHTML = current.tasks.map(task => `
+            document.getElementById('taskList').innerHTML = current.tasks.map(task => {
+                let colorClass = 'text-indigo-400 border-indigo-500/20 bg-indigo-500/10';
+                if(task.color === 'amber') colorClass = 'text-amber-400 border-amber-500/20 bg-amber-500/10';
+                if(task.color === 'emerald') colorClass = 'text-emerald-400 border-emerald-500/20 bg-emerald-500/10';
+                if(task.color === 'blue') colorClass = 'text-blue-400 border-blue-500/20 bg-blue-500/10';
+                if(task.color === 'purple') colorClass = 'text-purple-400 border-purple-500/20 bg-purple-500/10';
+                
+                return `
                 <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 flex items-center justify-between hover:border-slate-700 transition">
                     <div><p class="text-sm font-semibold">${task.title}</p><p class="text-xs text-slate-400">${task.sub}</p></div>
-                    <span class="text-xs px-2.5 py-1 border rounded-lg font-medium text-${task.color}-400 border-${task.color}-500/20 bg-${task.color}-500/10">${task.tag}</span>
-                </div>`).join('');
-        }
-
-        // --- 2. SUBJECT TRACKER LOGIC ---
-        const subjectNames = [
-            "Anatomy", "Physiology", "Biochemistry", "Pathology", "Pharmacology", "Microbiology", "Forensic Medicine",
-            "PSM", "ENT", "Ophthalmology", "Medicine", "Surgery", "OBG", "Pediatrics", "Orthopedics", "Dermatology", "Psychiatry", "Radiology", "Anesthesia"
-        ];
-
-        let subjectData = JSON.parse(localStorage.getItem('medPrepSubjects')) || {};
-        subjectNames.forEach(sub => {
-            if (!subjectData[sub]) {
-                subjectData[sub] = { rr: false, btr: false, qbMarrow: false, qbBtr: false, pyq: 0, gt: 0, score: "" };
-            }
-        });
-
-        function saveSubjects() {
-            localStorage.setItem('medPrepSubjects', JSON.stringify(subjectData));
-        }
-
-        function updateData(subject, field, value) {
-            subjectData[subject][field] = value;
-            saveSubjects();
-            if (field === 'pyq' || field === 'gt') {
-                document.getElementById(`${field}Val-${subject.replace(/\s/g, '')}`).innerText = value + '%';
-            }
-        }
-
-        function renderSubjects() {
-            const grid = document.getElementById('subjectGrid');
-            grid.innerHTML = subjectNames.map(sub => {
-                const safeName = sub.replace(/\s/g, '');
-                const data = subjectData[sub];
-                return `
-                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-4 hover:border-slate-700 transition shadow-lg">
-                    <h3 class="font-bold text-base text-indigo-300 border-b border-slate-800 pb-2">${sub}</h3>
-                    <div class="grid grid-cols-2 gap-2 text-xs">
-                        <label class="flex items-center space-x-2 cursor-pointer"><input type="checkbox" onchange="updateData('${sub}', 'rr', this.checked)" ${data.rr ? 'checked' : ''} class="rounded border-slate-700 bg-slate-800 text-indigo-600 focus:ring-indigo-500"><span class="text-slate-300">RR / Main Notes</span></label>
-                        <label class="flex items-center space-x-2 cursor-pointer"><input type="checkbox" onchange="updateData('${sub}', 'btr', this.checked)" ${data.btr ? 'checked' : ''} class="rounded border-slate-700 bg-slate-800 text-indigo-600 focus:ring-indigo-500"><span class="text-slate-300">BTR</span></label>
-                        <label class="flex items-center space-x-2 cursor-pointer"><input type="checkbox" onchange="updateData('${sub}', 'qbMarrow', this.checked)" ${data.qbMarrow ? 'checked' : ''} class="rounded border-slate-700 bg-slate-800 text-indigo-600 focus:ring-indigo-500"><span class="text-slate-300">Q-Bank (Marrow)</span></label>
-                        <label class="flex items-center space-x-2 cursor-pointer"><input type="checkbox" onchange="updateData('${sub}', 'qbBtr', this.checked)" ${data.qbBtr ? 'checked' : ''} class="rounded border-slate-700 bg-slate-800 text-indigo-600 focus:ring-indigo-500"><span class="text-slate-300">Q-Bank (BTR)</span></label>
-                    </div>
-                    <div class="space-y-3 pt-2">
-                        <div>
-                            <div class="flex justify-between text-xs mb-1"><span class="text-slate-400">PYQ Progress</span><span id="pyqVal-${safeName}" class="font-bold text-indigo-400">${data.pyq}%</span></div>
-                            <input type="range" min="0" max="100" value="${data.pyq}" oninput="updateData('${sub}', 'pyq', this.value)" class="w-full">
-                        </div>
-                        <div>
-                            <div class="flex justify-between text-xs mb-1"><span class="text-slate-400">GT Subject Progress</span><span id="gtVal-${safeName}" class="font-bold text-indigo-400">${data.gt}%</span></div>
-                            <input type="range" min="0" max="100" value="${data.gt}" oninput="updateData('${sub}', 'gt', this.value)" class="w-full">
-                        </div>
-                    </div>
-                    <div class="pt-2">
-                        <label class="text-xs text-slate-400 block mb-1">Latest GT Score (Marrow/BTR)</label>
-                        <input type="text" placeholder="e.g. 45/50 or 80%" value="${data.score}" onchange="updateData('${sub}', 'score', this.value)" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-sm text-slate-200 focus:outline-none focus:border-indigo-500 placeholder-slate-600">
-                    </div>
+                    <span class="text-xs px-2.5 py-1 border rounded-lg font-medium ${colorClass}">${task.tag}</span>
                 </div>`;
             }).join('');
         }
 
-        // --- 3. PHASES LOGIC ---
+        // --- 2. TEXT DATA STORAGE (Weekly & Monthly) ---
+        function saveTextData() {
+            const textData = {
+                wCT: document.getElementById('wCT').value,
+                wCTasks: document.getElementById('wCTasks').value,
+                wNT: document.getElementById('wNT').value,
+                wNTasks: document.getElementById('wNTasks').value,
+                mG1C: document.getElementById('mG1C').checked,
+                mG1T: document.getElementById('mG1T').value,
+                mG2C: document.getElementById('mG2C').checked,
+                mG2T: document.getElementById('mG2T').value
+            };
+            localStorage.setItem('medPrepTextData', JSON.stringify(textData));
+        }
+
+        function loadTextData() {
+            const textData = JSON.parse(localStorage.getItem('medPrepTextData'));
+            if (textData) {
+                if (document.getElementById('wCT')) document.getElementById('wCT').value = textData.wCT || '';
+                if (document.getElementById('wCTasks')) document.getElementById('wCTasks').value = textData.wCTasks || '';
+                if (document.getElementById('wNT')) document.getElementById('wNT').value = textData.wNT || '';
+                if (document.getElementById('wNTasks')) document.getElementById('wNTasks').value = textData.wNTasks || '';
+                if (document.getElementById('mG1C')) document.getElementById('mG1C').checked = textData.mG1C || false;
+                if (document.getElementById('mG1T')) document.getElementById('mG1T').value = textData.mG1T || '';
+                if (document.getElementById('mG2C')) document.getElementById('mG2C').checked = textData.mG2C || false;
+                if (document.getElementById('mG2T')) document.getElementById('mG2T').value = textData.mG2T || '';
+            }
+        }
+
+        // --- 3. SUBJECT TRACKER LOGIC ---
+        const subjectNames = ["Anatomy", "Physiology", "Biochemistry", "Pathology", "Pharmacology", "Microbiology", "Forensic Medicine", "PSM", "ENT", "Ophthalmology", "Medicine", "Surgery", "OBG", "Pediatrics", "Orthopedics", "Dermatology", "Psychiatry", "Radiology", "Anesthesia"];
+        let subjectData = JSON.parse(localStorage.getItem('medPrepSubjects')) || {};
+        subjectNames.forEach(sub => { if (!subjectData[sub]) subjectData[sub] = { rr: false, btr: false, qbMarrow: false, qbBtr: false, pyq: 0, gt: 0, score: "" }; });
+
+        function saveSubjects() { localStorage.setItem('medPrepSubjects', JSON.stringify(subjectData)); }
+        function updateData(sub, field, val) { 
+            subjectData[sub][field] = val; saveSubjects(); 
+            if (field === 'pyq' || field === 'gt') document.getElementById(`${field}Val-${sub.replace(/\s/g, '')}`).innerText = val + '%';
+        }
+
+        function renderSubjects() {
+            document.getElementById('subjectGrid').innerHTML = subjectNames.map(sub => {
+                const safe = sub.replace(/\s/g, ''); const data = subjectData[sub];
+                return `
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-4 hover:border-slate-700 transition shadow-lg">
+                    <h3 class="font-bold text-base text-indigo-300 border-b border-slate-800 pb-2">${sub}</h3>
+                    <div class="grid grid-cols-2 gap-2 text-xs">
+                        <label class="flex items-center space-x-2"><input type="checkbox" onchange="updateData('${sub}', 'rr', this.checked)" ${data.rr?'checked':''} class="rounded border-slate-700 bg-slate-800 text-indigo-600 focus:ring-indigo-500"><span class="text-slate-300">RR/Main</span></label>
+                        <label class="flex items-center space-x-2"><input type="checkbox" onchange="updateData('${sub}', 'btr', this.checked)" ${data.btr?'checked':''} class="rounded border-slate-700 bg-slate-800 text-indigo-600 focus:ring-indigo-500"><span class="text-slate-300">BTR</span></label>
+                        <label class="flex items-center space-x-2"><input type="checkbox" onchange="updateData('${sub}', 'qbMarrow', this.checked)" ${data.qbMarrow?'checked':''} class="rounded border-slate-700 bg-slate-800 text-indigo-600 focus:ring-indigo-500"><span class="text-slate-300">QB (Marrow)</span></label>
+                        <label class="flex items-center space-x-2"><input type="checkbox" onchange="updateData('${sub}', 'qbBtr', this.checked)" ${data.qbBtr?'checked':''} class="rounded border-slate-700 bg-slate-800 text-indigo-600 focus:ring-indigo-500"><span class="text-slate-300">QB (BTR)</span></label>
+                    </div>
+                    <div class="space-y-3 pt-2">
+                        <div><div class="flex justify-between text-xs mb-1"><span class="text-slate-400">PYQ Progress</span><span id="pyqVal-${safe}" class="font-bold text-indigo-400">${data.pyq}%</span></div><input type="range" min="0" max="100" value="${data.pyq}" oninput="updateData('${sub}', 'pyq', this.value)" class="w-full"></div>
+                        <div><div class="flex justify-between text-xs mb-1"><span class="text-slate-400">GT Progress</span><span id="gtVal-${safe}" class="font-bold text-indigo-400">${data.gt}%</span></div><input type="range" min="0" max="100" value="${data.gt}" oninput="updateData('${sub}', 'gt', this.value)" class="w-full"></div>
+                    </div>
+                    <div class="pt-2"><input type="text" placeholder="Latest GT Score" value="${data.score}" onchange="updateData('${sub}', 'score', this.value)" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-sm text-slate-200 focus:outline-none focus:border-indigo-500"></div>
+                </div>`;
+            }).join('');
+        }
+
+        // --- 4. PHASES LOGIC ---
         const phaseDetails = {
-            1: { title: "Phase 1: Core Clinical & High-Yield First Pass (Current -> Aug '26)", desc: "Focus on Major Clinical subjects (Medicine, Surgery, OBG, Pediatrics) paired with Pre-clinical links. Build strong notes and complete first-pass Q-Bank modules ahead of INI-Nov 2026. GT Frequency: 1 every 3-4 weeks." },
+            1: { title: "Phase 1: Core Clinical First Pass (Current -> Aug '26)", desc: "Focus on Major Clinical subjects paired with Pre-clinical links. Build strong notes and complete first-pass Q-Bank modules ahead of INI-Nov 2026. GT Frequency: 1 every 3-4 weeks." },
             2: { title: "Phase 2: Rapid Revision & INI Blitz (Sep - Oct '26)", desc: "Intensive high-yield tags review, custom Q-Bank modules of incorrect questions, and PYQs specific to INI-CET patterns. GT Frequency: 1 every 2 weeks." },
             3: { title: "Phase 3: INI-May '27 & NEET-PG '27 Deep Integration (Dec '26 - Apr '27)", desc: "Expanding focus toward NEET-PG and INI-May 2027. Advanced clinical scenario questions, multi-specialty integration, and grand test simulations. GT Frequency: 1 every 1-2 weeks." },
-            4: { title: "Phase 4: Final Grand Test & High-Yield Blitz (May '27 Onwards)", desc: "Peak performance sprint. Focus purely on grand tests, revision tables, high-yield image-based questions (IBQs), and exam temperament. GT Frequency: 2 per week." }
+            4: { title: "Phase 4: Final Sprint (May '27 Onwards)", desc: "Peak performance sprint. Focus purely on grand tests, revision tables, high-yield image-based questions (IBQs), and exam temperament. GT Frequency: 2 per week." }
         };
 
         function selectPhase(id) {
-            [1, 2, 3, 4].forEach(n => {
-                document.getElementById('phaseCard-' + n).className = 'bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-2xl p-5 space-y-3 cursor-pointer transition shadow-xl';
-            });
+            [1, 2, 3, 4].forEach(n => document.getElementById('phaseCard-' + n).className = 'bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-2xl p-5 space-y-3 cursor-pointer transition shadow-xl');
             document.getElementById('phaseCard-' + id).className = 'bg-slate-900 border-2 border-indigo-500 rounded-2xl p-5 space-y-3 cursor-pointer transition shadow-xl';
-            
             document.getElementById('phaseDetailTitle').innerText = phaseDetails[id].title;
             document.getElementById('phaseDetailDesc').innerText = phaseDetails[id].desc;
         }
 
-        // --- 4. TAB NAVIGATION ---
+        // --- 5. TAB NAVIGATION ---
         function switchTab(tab) {
-            ['daily', 'subjects', 'phases', 'calendar'].forEach(t => {
+            ['daily', 'weekly', 'subjects', 'phases', 'calendar'].forEach(t => {
                 document.getElementById('panel-' + t).classList.add('hidden');
                 document.getElementById('tab-' + t).className = 'px-4 py-2 bg-slate-900 text-slate-400 hover:text-white rounded-xl text-xs font-semibold transition whitespace-nowrap';
             });
@@ -297,9 +324,10 @@
         }
 
         // Initialize App
-        setShift('morning');
-        renderSubjects();
-        selectPhase(1); // Set default phase
+        setShift('morning'); 
+        renderSubjects(); 
+        loadTextData(); 
+        selectPhase(1);
     </script>
 </body>
 </html>
