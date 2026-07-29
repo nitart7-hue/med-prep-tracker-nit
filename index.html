@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedPrep OS - Study Tracker</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col">
+
+    <!-- Top Navigation Bar -->
+    <header class="border-b border-slate-800 bg-slate-900/50 backdrop-blur sticky top-0 z-50 px-6 py-4 flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+            <div class="h-9 w-9 bg-indigo-600 rounded-xl flex items-center justify-center font-bold text-white shadow-lg shadow-indigo-500/30">M</div>
+            <div>
+                <h1 class="font-bold text-lg leading-tight">MedPrep OS</h1>
+                <p class="text-xs text-slate-400">INI-Nov '26 • INI-May '27 • NEET-PG '27</p>
+            </div>
+        </div>
+        <div class="flex items-center space-x-4">
+            <button onclick="toggleBurnoutMode()" id="burnoutBtn" class="px-3 py-1.5 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-lg text-xs font-semibold hover:bg-emerald-500/20 transition">
+                ⚡ Burnout Guard: ON
+            </button>
+            <div class="text-xs text-right hidden sm:block">
+                <p class="text-slate-400">Current Phase</p>
+                <p class="font-medium text-indigo-400">Foundation & Core Q-Banks</p>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-1 max-w-7xl w-full mx-auto p-6 grid grid-cols-1 lg:grid-cols-4 gap-6">
+        
+        <!-- Left Sidebar: Milestones & Quick Stats -->
+        <div class="space-y-6">
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-4 shadow-xl">
+                <h2 class="text-sm font-semibold tracking-wider text-slate-400 uppercase">Exam Countdowns</h2>
+                
+                <div class="space-y-3">
+                    <div class="p-3 bg-slate-800/50 rounded-xl border border-slate-700/50">
+                        <div class="flex justify-between text-xs font-medium text-slate-400 mb-1">
+                            <span>INI-CET Nov '26</span>
+                            <span class="text-indigo-400 font-bold">Nov 1, 2026</span>
+                        </div>
+                        <div class="w-full bg-slate-700 h-2 rounded-full overflow-hidden">
+                            <div class="bg-indigo-500 h-full w-[35%]"></div>
+                        </div>
+                    </div>
+
+                    <div class="p-3 bg-slate-800/50 rounded-xl border border-slate-700/50">
+                        <div class="flex justify-between text-xs font-medium text-slate-400 mb-1">
+                            <span>INI-CET May '27</span>
+                            <span class="text-indigo-400 font-bold">May 2027</span>
+                        </div>
+                        <div class="w-full bg-slate-700 h-2 rounded-full overflow-hidden">
+                            <div class="bg-blue-500 h-full w-[15%]"></div>
+                        </div>
+                    </div>
+
+                    <div class="p-3 bg-slate-800/50 rounded-xl border border-slate-700/50">
+                        <div class="flex justify-between text-xs font-medium text-slate-400 mb-1">
+                            <span>NEET-PG '27</span>
+                            <span class="text-indigo-400 font-bold">Mid 2027</span>
+                        </div>
+                        <div class="w-full bg-slate-700 h-2 rounded-full overflow-hidden">
+                            <div class="bg-purple-500 h-full w-[10%]"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Break Engine Box -->
+            <div class="bg-gradient-to-br from-indigo-950/40 to-slate-900 border border-indigo-500/20 rounded-2xl p-5 space-y-3">
+                <div class="flex items-center justify-between">
+                    <h3 class="font-semibold text-sm text-indigo-300">☕ Daily Break Engine</h3>
+                    <span class="text-xs bg-indigo-500/20 text-indigo-300 px-2 py-0.5 rounded">Active</span>
+                </div>
+                <p class="text-xs text-slate-400">Scheduled breaks safeguard your focus blocks. Don't skip your downtime!</p>
+                <div class="pt-2 border-t border-indigo-500/10 flex justify-between text-xs font-medium">
+                    <span class="text-slate-300">Next Short Break:</span>
+                    <span class="text-emerald-400 font-bold">In 35 mins (15m walk)</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Center/Right Content Area: Tracker Tabs -->
+        <div class="lg:col-span-3 space-y-6">
+            
+            <!-- View Selector Tabs -->
+            <div class="flex space-x-2 border-b border-slate-800 pb-3">
+                <button onclick="switchTab('daily')" id="tab-daily" class="px-4 py-2 bg-indigo-600 text-white rounded-xl text-xs font-semibold shadow-lg shadow-indigo-600/20 transition">Daily Micro Tracker</button>
+                <button onclick="switchTab('weekly')" id="tab-weekly" class="px-4 py-2 bg-slate-900 text-slate-400 hover:text-white rounded-xl text-xs font-semibold transition">Weekly Meso Planner</button>
+                <button onclick="switchTab('monthly')" id="tab-monthly" class="px-4 py-2 bg-slate-900 text-slate-400 hover:text-white rounded-xl text-xs font-semibold transition">Monthly Macro Roadmaps</button>
+            </div>
+
+            <!-- Daily View Panel -->
+            <div id="panel-daily" class="space-y-4">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-lg font-bold">Today's Schedule & Tasks</h2>
+                    <span class="text-xs text-slate-400 bg-slate-900 border border-slate-800 px-3 py-1 rounded-lg">19 Subjects Master Rotation</span>
+                </div>
+
+                <div class="space-y-3">
+                    <!-- Task Item -->
+                    <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 flex items-center justify-between hover:border-slate-700 transition">
+                        <div class="flex items-center space-x-3">
+                            <input type="checkbox" class="h-5 w-5 rounded border-slate-700 bg-slate-800 text-indigo-600 focus:ring-indigo-500">
+                            <div>
+                                <p class="text-sm font-semibold">General Medicine: CVS Pharmacology & ECG Review</p>
+                                <p class="text-xs text-slate-400">Block 1 • Deep Focus Video Lectures + Notes Annotation</p>
+                            </div>
+                        </div>
+                        <span class="text-xs px-2.5 py-1 bg-amber-500/10 text-amber-400 border border-amber-500/20 rounded-lg font-medium">High Yield</span>
+                    </div>
+
+                    <!-- Task Item -->
+                    <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 flex items-center justify-between hover:border-slate-700 transition">
+                        <div class="flex items-center space-x-3">
+                            <input type="checkbox" class="h-5 w-5 rounded border-slate-700 bg-slate-800 text-indigo-600 focus:ring-indigo-500">
+                            <div>
+                                <p class="text-sm font-semibold">Surgery Q-Bank: Gastrointestinal Tract (50 MCQs)</p>
+                                <p class="text-xs text-slate-400">Block 2 • Active Recall & Error Log review</p>
+                            </div>
+                        </div>
+                        <span class="text-xs px-2.5 py-1 bg-blue-500/10 text-blue-400 border border-blue-500/20 rounded-lg font-medium">Q-Bank</span>
+                    </div>
+
+                    <!-- Break Block -->
+                    <div class="bg-emerald-950/20 border border-emerald-500/20 rounded-xl p-4 flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <input type="checkbox" checked disabled class="h-5 w-5 rounded border-emerald-700 bg-emerald-900 text-emerald-600">
+                            <div>
+                                <p class="text-sm font-semibold text-emerald-300">Mandatory Afternoon Reset & Long Break</p>
+                                <p class="text-xs text-emerald-400/70">Disconnect completely, hydrate, and stretch</p>
+                            </div>
+                        </div>
+                        <span class="text-xs px-2.5 py-1 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-lg font-medium">Rest Block</span>
+                    </div>
+
+                    <!-- Task Item -->
+                    <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 flex items-center justify-between hover:border-slate-700 transition">
+                        <div class="flex items-center space-x-3">
+                            <input type="checkbox" class="h-5 w-5 rounded border-slate-700 bg-slate-800 text-indigo-600 focus:ring-indigo-500">
+                            <div>
+                                <p class="text-sm font-semibold">Pathology & Microbiology Flashcards (Anki)</p>
+                                <p class="text-xs text-slate-400">Block 3 • Spaced Repetition Due Cards</p>
+                            </div>
+                        </div>
+                        <span class="text-xs px-2.5 py-1 bg-purple-500/10 text-purple-400 border border-purple-500/20 rounded-lg font-medium">Revision</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Weekly View Panel (Hidden by default) -->
+            <div id="panel-weekly" class="space-y-4 hidden">
+                <h2 class="text-lg font-bold">Weekly Subject Pairing Strategy</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 space-y-2">
+                        <span class="text-xs text-indigo-400 font-bold uppercase tracking-wider">Current Week</span>
+                        <h3 class="font-bold text-base">Cardiovascular & Respiratory Focus</h3>
+                        <p class="text-xs text-slate-400">Pairing General Medicine with Pathology, Pharmacology, and relevant Radiology IBQs.</p>
+                    </div>
+                    <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 space-y-2">
+                        <span class="text-xs text-slate-500 font-bold uppercase tracking-wider">Next Week</span>
+                        <h3 class="font-bold text-base">Abdominal Surgery & GI Tract</h3>
+                        <p class="text-xs text-slate-400">Pairing Surgery with Anatomy, Physiology, and localized Q-Bank modules.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Monthly View Panel (Hidden by default) -->
+            <div id="panel-monthly" class="space-y-4 hidden">
+                <h2 class="text-lg font-bold">Macro Roadmap (Target: INI-Nov '26)</h2>
+                <div class="space-y-3">
+                    <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 flex justify-between items-center">
+                        <div>
+                            <p class="text-xs text-indigo-400 font-bold">Phase 1 (Active)</p>
+                            <h3 class="font-bold text-sm">Core Clinical & Paraclinical First Pass</h3>
+                        </div>
+                        <span class="text-xs bg-indigo-600 text-white px-3 py-1 rounded-lg">In Progress</span>
+                    </div>
+                    <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 flex justify-between items-center opacity-70">
+                        <div>
+                            <p class="text-xs text-slate-400 font-bold">Phase 2</p>
+                            <h3 class="font-bold text-sm">Rapid Revision, High-Yield Tags & Custom Modules</h3>
+                        </div>
+                        <span class="text-xs bg-slate-800 text-slate-400 px-3 py-1 rounded-lg">Upcoming</span>
+                    </div>
+                    <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 flex justify-between items-center opacity-70">
+                        <div>
+                            <p class="text-xs text-slate-400 font-bold">Phase 3</p>
+                            <h3 class="font-bold text-sm">INI-CET Grand Tests & Final 30-Day Sprint</h3>
+                        </div>
+                        <span class="text-xs bg-slate-800 text-slate-400 px-3 py-1 rounded-lg">Upcoming</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Script to handle tab switching and UI toggles -->
+    <script>
+        function switchTab(tab) {
+            ['daily', 'weekly', 'monthly'].forEach(t => {
+                document.getElementById('panel-' + t).classList.add('hidden');
+                document.getElementById('tab-' + t).className = 'px-4 py-2 bg-slate-900 text-slate-400 hover:text-white rounded-xl text-xs font-semibold transition';
+            });
+            document.getElementById('panel-' + tab).classList.remove('hidden');
+            document.getElementById('tab-' + tab).className = 'px-4 py-2 bg-indigo-600 text-white rounded-xl text-xs font-semibold shadow-lg shadow-indigo-600/20 transition';
+        }
+
+        let burnoutActive = true;
+        function toggleBurnoutMode() {
+            burnoutActive = !burnoutActive;
+            const btn = document.getElementById('burnoutBtn');
+            if(burnoutActive) {
+                btn.className = 'px-3 py-1.5 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-lg text-xs font-semibold hover:bg-emerald-500/20 transition';
+                btn.innerHTML = '⚡ Burnout Guard: ON';
+            } else {
+                btn.className = 'px-3 py-1.5 bg-slate-800 text-slate-400 border border-slate-700 rounded-lg text-xs font-semibold transition';
+                btn.innerHTML = '⚡ Burnout Guard: OFF';
+            }
+        }
+    </script>
+</body>
+</html>
