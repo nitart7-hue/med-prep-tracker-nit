@@ -14,6 +14,8 @@
         input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 4px; cursor: pointer; background: #334155; border-radius: 2px; }
         .scrollbar-hide::-webkit-scrollbar { display: none; }
         .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+        /* Custom checkbox styles */
+        .task-checkbox:checked { background-color: #10b981; border-color: #10b981; background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3e%3c/svg%3e"); }
     </style>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col">
@@ -40,7 +42,6 @@
         
         <!-- Left Sidebar: Shift Controller & Countdowns -->
         <div class="space-y-6">
-            <!-- Shift Quick Controller -->
             <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-3 shadow-xl">
                 <h2 class="text-sm font-semibold tracking-wider text-slate-400 uppercase">PHC Duty Status</h2>
                 <div class="grid grid-cols-2 gap-2">
@@ -51,36 +52,20 @@
                 </div>
             </div>
 
-            <!-- Exam Countdowns -->
             <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-4 shadow-xl">
                 <h2 class="text-sm font-semibold tracking-wider text-slate-400 uppercase">Exam Milestones</h2>
                 <div class="space-y-3">
                     <div class="p-3 bg-slate-800/50 rounded-xl border border-slate-700/50">
-                        <div class="flex justify-between text-xs font-medium text-slate-400 mb-1">
-                            <span>INI-CET Nov '26</span>
-                            <span class="text-indigo-400 font-bold">Nov 2026</span>
-                        </div>
-                        <div class="w-full bg-slate-700 h-2 rounded-full overflow-hidden">
-                            <div class="bg-indigo-500 h-full w-[35%]"></div>
-                        </div>
+                        <div class="flex justify-between text-xs font-medium text-slate-400 mb-1"><span>INI-CET Nov '26</span><span class="text-indigo-400 font-bold">Nov 2026</span></div>
+                        <div class="w-full bg-slate-700 h-2 rounded-full overflow-hidden"><div class="bg-indigo-500 h-full w-[35%]"></div></div>
                     </div>
                     <div class="p-3 bg-slate-800/50 rounded-xl border border-slate-700/50">
-                        <div class="flex justify-between text-xs font-medium text-slate-400 mb-1">
-                            <span>INI-May '27</span>
-                            <span class="text-blue-400 font-bold">May 2027</span>
-                        </div>
-                        <div class="w-full bg-slate-700 h-2 rounded-full overflow-hidden">
-                            <div class="bg-blue-500 h-full w-[15%]"></div>
-                        </div>
+                        <div class="flex justify-between text-xs font-medium text-slate-400 mb-1"><span>INI-May '27</span><span class="text-blue-400 font-bold">May 2027</span></div>
+                        <div class="w-full bg-slate-700 h-2 rounded-full overflow-hidden"><div class="bg-blue-500 h-full w-[15%]"></div></div>
                     </div>
                     <div class="p-3 bg-slate-800/50 rounded-xl border border-slate-700/50">
-                        <div class="flex justify-between text-xs font-medium text-slate-400 mb-1">
-                            <span>NEET-PG '27</span>
-                            <span class="text-purple-400 font-bold">Mid 2027</span>
-                        </div>
-                        <div class="w-full bg-slate-700 h-2 rounded-full overflow-hidden">
-                            <div class="bg-purple-500 h-full w-[10%]"></div>
-                        </div>
+                        <div class="flex justify-between text-xs font-medium text-slate-400 mb-1"><span>NEET-PG '27</span><span class="text-purple-400 font-bold">Mid 2027</span></div>
+                        <div class="w-full bg-slate-700 h-2 rounded-full overflow-hidden"><div class="bg-purple-500 h-full w-[10%]"></div></div>
                     </div>
                 </div>
             </div>
@@ -91,10 +76,11 @@
             
             <!-- View Selector Tabs -->
             <div class="flex space-x-2 border-b border-slate-800 pb-3 overflow-x-auto scrollbar-hide">
-                <button onclick="switchTab('daily')" id="tab-daily" class="px-4 py-2 bg-indigo-600 text-white rounded-xl text-xs font-semibold shadow-lg shadow-indigo-600/20 transition whitespace-nowrap">Daily Plan</button>
-                <button onclick="switchTab('weekly')" id="tab-weekly" class="px-4 py-2 bg-slate-900 text-slate-400 hover:text-white rounded-xl text-xs font-semibold transition whitespace-nowrap">🗓️ Weekly Plan</button>
-                <button onclick="switchTab('phases')" id="tab-phases" class="px-4 py-2 bg-slate-900 text-slate-400 hover:text-white rounded-xl text-xs font-semibold transition whitespace-nowrap">🎯 Monthly & Phases</button>
+                <button onclick="switchTab('daily')" id="tab-daily" class="px-4 py-2 bg-indigo-600 text-white rounded-xl text-xs font-semibold shadow-lg transition whitespace-nowrap">Daily Plan</button>
+                <button onclick="switchTab('weekly')" id="tab-weekly" class="px-4 py-2 bg-slate-900 text-slate-400 hover:text-white rounded-xl text-xs font-semibold transition whitespace-nowrap">🗓️ Weekly</button>
+                <button onclick="switchTab('phases')" id="tab-phases" class="px-4 py-2 bg-slate-900 text-slate-400 hover:text-white rounded-xl text-xs font-semibold transition whitespace-nowrap">🎯 Monthly</button>
                 <button onclick="switchTab('subjects')" id="tab-subjects" class="px-4 py-2 bg-slate-900 text-slate-400 hover:text-white rounded-xl text-xs font-semibold transition whitespace-nowrap">📚 Subjects</button>
+                <button onclick="switchTab('hyt')" id="tab-hyt" class="px-4 py-2 bg-slate-900 text-slate-400 hover:text-white rounded-xl text-xs font-semibold transition whitespace-nowrap">🔥 20 HYT</button>
                 <button onclick="switchTab('calendar')" id="tab-calendar" class="px-4 py-2 bg-slate-900 text-slate-400 hover:text-white rounded-xl text-xs font-semibold transition whitespace-nowrap">📅 Calendar</button>
             </div>
 
@@ -104,26 +90,22 @@
                     <h2 id="planTitle" class="text-lg font-bold">Today's Adaptive Plan</h2>
                     <span class="text-xs text-slate-400 bg-slate-900 border border-slate-800 px-3 py-1 rounded-lg">Auto-adjusted for PHC Duties</span>
                 </div>
-                <div id="taskList" class="space-y-3">
-                    <!-- Dynamic tasks rendered via script -->
-                </div>
+                <div id="taskList" class="space-y-3"></div>
             </div>
 
             <!-- Weekly View Panel -->
             <div id="panel-weekly" class="space-y-4 hidden">
                 <div class="flex items-center justify-between">
                     <h2 class="text-lg font-bold">Weekly Subject Strategy</h2>
-                    <span class="text-xs text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1 rounded-lg">Auto-saves text</span>
+                    <span class="text-xs text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1 rounded-lg">Auto-saves checklists</span>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-3 shadow-xl">
                         <div class="flex justify-between items-center mb-2">
                             <span class="text-xs text-indigo-400 font-bold uppercase tracking-wider">Current Week Target</span>
-                            <button onclick="toggleDayWise()" class="text-xs bg-indigo-600 hover:bg-indigo-500 text-white px-3 py-1 rounded-lg transition shadow-md cursor-pointer">Day-Wise Plan</button>
+                            <button onclick="document.getElementById('dayWiseView').classList.toggle('hidden')" class="text-xs bg-indigo-600 hover:bg-indigo-500 text-white px-3 py-1 rounded-lg transition shadow-md cursor-pointer">Day-Wise Plan</button>
                         </div>
                         <input id="wCT" oninput="saveTextData()" type="text" placeholder="e.g., Med + Pharma" class="w-full bg-transparent border-b border-slate-700 text-base font-bold text-white focus:outline-none focus:border-indigo-500 pb-1 mb-2">
-                        <p class="text-xs text-slate-400">List this week's goals below:</p>
-                        <textarea id="wCTasks" oninput="saveTextData()" rows="4" placeholder="- Finish Medicine QBank&#10;- BTR Pharma Notes&#10;- 1 Grand Test" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-3 text-sm text-slate-200 focus:outline-none focus:border-indigo-500"></textarea>
                     </div>
                     <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-3 shadow-xl opacity-80">
                         <span class="text-xs text-slate-500 font-bold uppercase tracking-wider">Next Week Forecast</span>
@@ -133,45 +115,11 @@
                     </div>
                 </div>
 
-                <!-- Expanded Day-wise View -->
+                <!-- Expanded Day-wise Checklists View -->
                 <div id="dayWiseView" class="hidden bg-slate-900 border border-indigo-500/30 rounded-2xl p-5 shadow-xl mt-4 space-y-3">
                     <h3 class="text-sm font-bold text-indigo-300 uppercase tracking-wider border-b border-slate-800 pb-2">Day-Wise To-Do Columns</h3>
-                    <div class="flex overflow-x-auto space-x-4 pb-2 scrollbar-hide">
-                        <!-- Monday -->
-                        <div class="min-w-[150px] bg-slate-800/50 rounded-xl p-3 border border-slate-700/50">
-                            <span class="text-xs font-bold text-slate-300 block mb-2 border-b border-slate-700 pb-1">Monday</span>
-                            <textarea id="dw_Mon" oninput="saveTextData()" rows="6" placeholder="To-do..." class="w-full bg-transparent border-none text-xs text-slate-300 focus:outline-none focus:ring-0 p-0 resize-none placeholder-slate-600"></textarea>
-                        </div>
-                        <!-- Tuesday -->
-                        <div class="min-w-[150px] bg-slate-800/50 rounded-xl p-3 border border-slate-700/50">
-                            <span class="text-xs font-bold text-slate-300 block mb-2 border-b border-slate-700 pb-1">Tuesday</span>
-                            <textarea id="dw_Tue" oninput="saveTextData()" rows="6" placeholder="To-do..." class="w-full bg-transparent border-none text-xs text-slate-300 focus:outline-none focus:ring-0 p-0 resize-none placeholder-slate-600"></textarea>
-                        </div>
-                        <!-- Wednesday -->
-                        <div class="min-w-[150px] bg-slate-800/50 rounded-xl p-3 border border-slate-700/50">
-                            <span class="text-xs font-bold text-slate-300 block mb-2 border-b border-slate-700 pb-1">Wednesday</span>
-                            <textarea id="dw_Wed" oninput="saveTextData()" rows="6" placeholder="To-do..." class="w-full bg-transparent border-none text-xs text-slate-300 focus:outline-none focus:ring-0 p-0 resize-none placeholder-slate-600"></textarea>
-                        </div>
-                        <!-- Thursday -->
-                        <div class="min-w-[150px] bg-slate-800/50 rounded-xl p-3 border border-slate-700/50">
-                            <span class="text-xs font-bold text-slate-300 block mb-2 border-b border-slate-700 pb-1">Thursday</span>
-                            <textarea id="dw_Thu" oninput="saveTextData()" rows="6" placeholder="To-do..." class="w-full bg-transparent border-none text-xs text-slate-300 focus:outline-none focus:ring-0 p-0 resize-none placeholder-slate-600"></textarea>
-                        </div>
-                        <!-- Friday -->
-                        <div class="min-w-[150px] bg-slate-800/50 rounded-xl p-3 border border-slate-700/50">
-                            <span class="text-xs font-bold text-slate-300 block mb-2 border-b border-slate-700 pb-1">Friday</span>
-                            <textarea id="dw_Fri" oninput="saveTextData()" rows="6" placeholder="To-do..." class="w-full bg-transparent border-none text-xs text-slate-300 focus:outline-none focus:ring-0 p-0 resize-none placeholder-slate-600"></textarea>
-                        </div>
-                        <!-- Saturday -->
-                        <div class="min-w-[150px] bg-slate-800/50 rounded-xl p-3 border border-slate-700/50">
-                            <span class="text-xs font-bold text-slate-300 block mb-2 border-b border-slate-700 pb-1">Saturday</span>
-                            <textarea id="dw_Sat" oninput="saveTextData()" rows="6" placeholder="To-do..." class="w-full bg-transparent border-none text-xs text-slate-300 focus:outline-none focus:ring-0 p-0 resize-none placeholder-slate-600"></textarea>
-                        </div>
-                        <!-- Sunday -->
-                        <div class="min-w-[150px] bg-slate-800/50 rounded-xl p-3 border border-slate-700/50">
-                            <span class="text-xs font-bold text-slate-300 block mb-2 border-b border-slate-700 pb-1">Sunday</span>
-                            <textarea id="dw_Sun" oninput="saveTextData()" rows="6" placeholder="To-do..." class="w-full bg-transparent border-none text-xs text-slate-300 focus:outline-none focus:ring-0 p-0 resize-none placeholder-slate-600"></textarea>
-                        </div>
+                    <div class="flex overflow-x-auto space-x-4 pb-2 scrollbar-hide" id="weeklyDaysContainer">
+                        <!-- Dynamically populated by JS -->
                     </div>
                 </div>
             </div>
@@ -180,9 +128,21 @@
             <div id="panel-subjects" class="space-y-4 hidden">
                 <div class="flex items-center justify-between">
                     <h2 class="text-lg font-bold">19 Subjects Master Checklist</h2>
-                    <span class="text-xs text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1 rounded-lg">Auto-saves to device</span>
+                    <span class="text-xs text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1 rounded-lg">Auto-saves subtopics</span>
                 </div>
                 <div id="subjectGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+            </div>
+
+            <!-- 20 HYT Panel -->
+            <div id="panel-hyt" class="space-y-4 hidden">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-lg font-bold">🔥 20 High Yield Topics (HYT)</h2>
+                    <span class="text-xs text-amber-400 bg-amber-500/10 border border-amber-500/20 px-3 py-1 rounded-lg">Must complete before exam</span>
+                </div>
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4">
+                    <input type="text" id="hytInput" onkeypress="addHYT(event)" placeholder="+ Type an HYT and press Enter..." class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-sm text-slate-200 focus:outline-none focus:border-indigo-500">
+                    <div id="hytList" class="space-y-2"></div>
+                </div>
             </div>
 
             <!-- Interactive Macro Phases & Monthly Panel -->
@@ -191,53 +151,34 @@
                     <h2 class="text-lg font-bold">Monthly Goals & Macro Phases</h2>
                     <span class="text-xs text-indigo-400 bg-indigo-500/10 border border-indigo-500/20 px-3 py-1 rounded-lg">Tap a phase to view details</span>
                 </div>
-
-                <!-- Monthly Goals Section -->
                 <div class="bg-gradient-to-r from-indigo-900/40 to-slate-900 border border-indigo-500/30 rounded-2xl p-5 space-y-3 mb-6 shadow-xl">
                     <h3 class="font-bold text-sm text-indigo-300 uppercase tracking-wider border-b border-indigo-500/20 pb-2">Current Month's Major Milestones</h3>
                     <div class="flex flex-col space-y-2 pt-1">
                         <label class="flex items-center space-x-3 cursor-pointer">
                             <input id="mG1C" onchange="saveTextData()" type="checkbox" class="h-5 w-5 rounded border-slate-700 bg-slate-800 text-indigo-600 focus:ring-indigo-500">
-                            <input id="mG1T" oninput="saveTextData()" type="text" placeholder="Type a monthly goal (e.g., Complete 30% of Medicine Q-Bank)" class="flex-1 bg-transparent border-none text-sm text-white focus:outline-none focus:ring-0">
+                            <input id="mG1T" oninput="saveTextData()" type="text" placeholder="Type a monthly goal" class="flex-1 bg-transparent border-none text-sm text-white focus:outline-none focus:ring-0">
                         </label>
                         <label class="flex items-center space-x-3 cursor-pointer">
                             <input id="mG2C" onchange="saveTextData()" type="checkbox" class="h-5 w-5 rounded border-slate-700 bg-slate-800 text-indigo-600 focus:ring-indigo-500">
-                            <input id="mG2T" oninput="saveTextData()" type="text" placeholder="Type a monthly goal (e.g., Take 2 Grand Tests)" class="flex-1 bg-transparent border-none text-sm text-white focus:outline-none focus:ring-0">
+                            <input id="mG2T" oninput="saveTextData()" type="text" placeholder="Type a monthly goal" class="flex-1 bg-transparent border-none text-sm text-white focus:outline-none focus:ring-0">
                         </label>
                     </div>
                 </div>
-
-                <!-- Phase Cards Grid -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div onclick="selectPhase(1)" id="phaseCard-1" class="bg-slate-900 border-2 border-indigo-500 rounded-2xl p-5 space-y-3 cursor-pointer transition shadow-xl">
-                        <div class="flex justify-between items-center"><span class="text-xs bg-indigo-500/20 text-indigo-300 px-2.5 py-1 rounded-lg font-bold">Phase 1 • Active</span><span class="text-xs text-slate-400">Target: INI-Nov '26</span></div>
-                        <h3 class="font-bold text-base">Core Clinical First Pass</h3>
-                    </div>
-                    <div onclick="selectPhase(2)" id="phaseCard-2" class="bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-2xl p-5 space-y-3 cursor-pointer transition shadow-xl">
-                        <div class="flex justify-between items-center"><span class="text-xs bg-slate-800 text-slate-400 px-2.5 py-1 rounded-lg font-bold">Phase 2 • Upcoming</span><span class="text-xs text-slate-400">Sep - Oct '26</span></div>
-                        <h3 class="font-bold text-base">Rapid Revision & INI Blitz</h3>
-                    </div>
-                    <div onclick="selectPhase(3)" id="phaseCard-3" class="bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-2xl p-5 space-y-3 cursor-pointer transition shadow-xl">
-                        <div class="flex justify-between items-center"><span class="text-xs bg-slate-800 text-slate-400 px-2.5 py-1 rounded-lg font-bold">Phase 3 • Future</span><span class="text-xs text-slate-400">Dec '26 - Apr '27</span></div>
-                        <h3 class="font-bold text-base">INI-May '27 & NEET-PG '27</h3>
-                    </div>
-                    <div onclick="selectPhase(4)" id="phaseCard-4" class="bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-2xl p-5 space-y-3 cursor-pointer transition shadow-xl">
-                        <div class="flex justify-between items-center"><span class="text-xs bg-slate-800 text-slate-400 px-2.5 py-1 rounded-lg font-bold">Phase 4 • Final Sprint</span><span class="text-xs text-slate-400">May '27 Onwards</span></div>
-                        <h3 class="font-bold text-base">Final Grand Tests Blitz</h3>
-                    </div>
+                    <div onclick="selectPhase(1)" id="phaseCard-1" class="bg-slate-900 border-2 border-indigo-500 rounded-2xl p-5 space-y-3 cursor-pointer transition shadow-xl"><h3 class="font-bold text-base">Phase 1</h3></div>
+                    <div onclick="selectPhase(2)" id="phaseCard-2" class="bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-2xl p-5 space-y-3 cursor-pointer transition shadow-xl"><h3 class="font-bold text-base">Phase 2</h3></div>
+                    <div onclick="selectPhase(3)" id="phaseCard-3" class="bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-2xl p-5 space-y-3 cursor-pointer transition shadow-xl"><h3 class="font-bold text-base">Phase 3</h3></div>
+                    <div onclick="selectPhase(4)" id="phaseCard-4" class="bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-2xl p-5 space-y-3 cursor-pointer transition shadow-xl"><h3 class="font-bold text-base">Phase 4</h3></div>
                 </div>
-
                 <div id="phaseDetailBox" class="bg-slate-900 border border-indigo-500/30 rounded-2xl p-5 space-y-3 mt-4">
-                    <h3 id="phaseDetailTitle" class="font-bold text-base text-indigo-300">Phase 1: Core Clinical & High-Yield First Pass (Current -> Aug '26)</h3>
-                    <p id="phaseDetailDesc" class="text-sm text-slate-300 leading-relaxed">Focus on Major Clinical subjects (Medicine, Surgery, OBG, Pediatrics) paired with Pre-clinical links. Build strong notes and complete first-pass Q-Bank modules ahead of INI-Nov 2026. GT Frequency: 1 every 3-4 weeks.</p>
+                    <h3 id="phaseDetailTitle" class="font-bold text-base text-indigo-300">Phase Details</h3>
+                    <p id="phaseDetailDesc" class="text-sm text-slate-300 leading-relaxed"></p>
                 </div>
             </div>
 
-            <!-- Google Calendar View Panel -->
+            <!-- Calendar View Panel -->
             <div id="panel-calendar" class="space-y-4 hidden">
-                <div class="flex items-center justify-between">
-                    <h2 class="text-lg font-bold">BMO Shift Schedule</h2>
-                </div>
+                <div class="flex items-center justify-between"><h2 class="text-lg font-bold">BMO Shift Schedule</h2></div>
                 <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 calendar-container">
                     <iframe src="https://calendar.google.com/calendar/embed?src=2a43860ddbb18d8d9a54351a39897c2156aea1c5359de87c47b516b9e2a6a6a7%40group.calendar.google.com&ctz=Asia%2FKolkata" style="border: 0" width="800" height="600" frameborder="0" scrolling="no"></iframe>
                 </div>
@@ -247,7 +188,9 @@
     </main>
 
     <script>
-        // --- 1. DAILY PLAN LOGIC & SAFE COLORS ---
+        let currentActiveShift = 'morning';
+
+        // --- 1. DAILY PLAN LOGIC (With Strike-through Checkboxes) ---
         const plans = {
             morning: { label: "Morning Shift (9 AM - 3 PM)", title: "Morning Shift Plan", tasks: [{ title: "Morning Review", sub: "Deep Focus", tag: "Study", color: "indigo" }, { title: "PHC Duty", sub: "9 AM - 3 PM", tag: "Duty", color: "amber" }, { title: "Evening Q-Bank", sub: "Error Notebook", tag: "Q-Bank", color: "blue" }] },
             night: { label: "Night Duty (3 PM - 9 AM)", title: "Night Duty Plan", tasks: [{ title: "Pre-Night Prep", sub: "Audio/Video Notes", tag: "Prep", color: "blue" }, { title: "PHC Night Duty", sub: "3 PM - 9 AM Next Day", tag: "Duty", color: "amber" }, { title: "Rest & Recovery", sub: "Mandatory", tag: "Rest", color: "emerald" }] },
@@ -255,7 +198,17 @@
             weekoff: { label: "Full Week Off", title: "Week Off Sprint Plan", tasks: [{ title: "Grand Test", sub: "3-hour block", tag: "GT", color: "indigo" }, { title: "Test Analysis", sub: "Review Errors", tag: "Review", color: "amber" }, { title: "Core Subject Deep Dive", sub: "Evening", tag: "Focus", color: "purple" }] }
         };
 
+        let dailyTicks = JSON.parse(localStorage.getItem('medPrepDailyTicks')) || {};
+
+        function toggleDailyTask(shift, idx) {
+            const key = `${shift}_${idx}`;
+            dailyTicks[key] = !dailyTicks[key];
+            localStorage.setItem('medPrepDailyTicks', JSON.stringify(dailyTicks));
+            setShift(currentActiveShift); 
+        }
+
         function setShift(type) {
+            currentActiveShift = type;
             ['morning', 'night', 'post', 'weekoff'].forEach(t => document.getElementById('btn-' + t).classList.replace('bg-indigo-600', 'bg-slate-800'));
             ['morning', 'night', 'post', 'weekoff'].forEach(t => document.getElementById('btn-' + t).classList.remove('text-white', 'shadow-lg', 'shadow-indigo-600/20'));
             
@@ -267,45 +220,193 @@
             document.getElementById('currentShiftLabel').innerText = current.label;
             document.getElementById('planTitle').innerText = current.title;
             
-            document.getElementById('taskList').innerHTML = current.tasks.map(task => {
-                let colorClass = 'text-indigo-400 border-indigo-500/20 bg-indigo-500/10';
-                if(task.color === 'amber') colorClass = 'text-amber-400 border-amber-500/20 bg-amber-500/10';
-                if(task.color === 'emerald') colorClass = 'text-emerald-400 border-emerald-500/20 bg-emerald-500/10';
-                if(task.color === 'blue') colorClass = 'text-blue-400 border-blue-500/20 bg-blue-500/10';
-                if(task.color === 'purple') colorClass = 'text-purple-400 border-purple-500/20 bg-purple-500/10';
+            document.getElementById('taskList').innerHTML = current.tasks.map((task, idx) => {
+                const key = `${type}_${idx}`;
+                const isDone = dailyTicks[key];
+                
+                let tagClass = 'text-indigo-400 border-indigo-500/20 bg-indigo-500/10';
+                if(task.color === 'amber') tagClass = 'text-amber-400 border-amber-500/20 bg-amber-500/10';
+                if(task.color === 'emerald') tagClass = 'text-emerald-400 border-emerald-500/20 bg-emerald-500/10';
+                if(task.color === 'blue') tagClass = 'text-blue-400 border-blue-500/20 bg-blue-500/10';
+                if(task.color === 'purple') tagClass = 'text-purple-400 border-purple-500/20 bg-purple-500/10';
+
+                const titleClass = isDone ? 'text-emerald-400 line-through' : 'text-slate-100';
+                const subClass = isDone ? 'text-emerald-500/50 line-through' : 'text-slate-400';
                 
                 return `
-                <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 flex items-center justify-between hover:border-slate-700 transition">
-                    <div><p class="text-sm font-semibold">${task.title}</p><p class="text-xs text-slate-400">${task.sub}</p></div>
-                    <span class="text-xs px-2.5 py-1 border rounded-lg font-medium ${colorClass}">${task.tag}</span>
+                <div class="bg-slate-900 border ${isDone ? 'border-emerald-500/30 bg-emerald-950/10' : 'border-slate-800 hover:border-slate-700'} rounded-xl p-4 flex items-center justify-between transition">
+                    <div class="flex items-center space-x-3">
+                        <input type="checkbox" onchange="toggleDailyTask('${type}', ${idx})" ${isDone ? 'checked' : ''} class="task-checkbox h-5 w-5 rounded border-slate-700 bg-slate-800 appearance-none outline-none transition cursor-pointer">
+                        <div>
+                            <p class="text-sm font-semibold ${titleClass} transition">${task.title}</p>
+                            <p class="text-xs ${subClass} transition">${task.sub}</p>
+                        </div>
+                    </div>
+                    <span class="text-xs px-2.5 py-1 border rounded-lg font-medium ${tagClass}">${task.tag}</span>
                 </div>`;
             }).join('');
         }
 
-        // --- 1.5. TOGGLE DAY WISE VIEW ---
-        function toggleDayWise() {
-            const el = document.getElementById('dayWiseView');
-            el.classList.toggle('hidden');
+        // --- 2. WEEKLY DAY-WISE CHECKLISTS ---
+        const daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+        let weeklyDays = JSON.parse(localStorage.getItem('medPrepWeeklyDays')) || { Mon:[], Tue:[], Wed:[], Thu:[], Fri:[], Sat:[], Sun:[] };
+
+        function addDayTask(e, day) {
+            if(e.key === 'Enter' && e.target.value.trim() !== '') {
+                weeklyDays[day].push({ text: e.target.value, done: false });
+                localStorage.setItem('medPrepWeeklyDays', JSON.stringify(weeklyDays));
+                renderWeeklyDays();
+                // Restore focus for continuous tablet typing
+                setTimeout(() => document.getElementById('dayInput_' + day).focus(), 10);
+            }
+        }
+        function toggleDayTask(day, idx) {
+            weeklyDays[day][idx].done = !weeklyDays[day][idx].done;
+            localStorage.setItem('medPrepWeeklyDays', JSON.stringify(weeklyDays));
+            renderWeeklyDays();
+        }
+        function removeDayTask(day, idx) {
+            weeklyDays[day].splice(idx, 1);
+            localStorage.setItem('medPrepWeeklyDays', JSON.stringify(weeklyDays));
+            renderWeeklyDays();
         }
 
-        // --- 2. TEXT DATA STORAGE (Weekly, Monthly & Day-Wise) ---
+        function renderWeeklyDays() {
+            document.getElementById('weeklyDaysContainer').innerHTML = daysOfWeek.map(day => {
+                const tasksHtml = weeklyDays[day].map((t, idx) => `
+                    <div class="flex items-start space-x-2 mb-2 group">
+                        <input type="checkbox" onchange="toggleDayTask('${day}', ${idx})" ${t.done ? 'checked' : ''} class="task-checkbox mt-0.5 h-3.5 w-3.5 shrink-0 rounded border-slate-700 bg-slate-800 appearance-none cursor-pointer">
+                        <span class="text-xs ${t.done ? 'text-slate-500 line-through' : 'text-slate-300'} flex-1 break-words">${t.text}</span>
+                        <button onclick="removeDayTask('${day}', ${idx})" class="text-slate-600 hover:text-red-400 text-xs opacity-0 group-hover:opacity-100">×</button>
+                    </div>
+                `).join('');
+                
+                return `
+                <div class="min-w-[180px] bg-slate-800/50 rounded-xl p-3 border border-slate-700/50 flex flex-col h-64">
+                    <span class="text-xs font-bold text-slate-300 block mb-2 border-b border-slate-700 pb-1">${day}</span>
+                    <div class="flex-1 overflow-y-auto scrollbar-hide space-y-1 mb-2">${tasksHtml}</div>
+                    <input id="dayInput_${day}" type="text" onkeypress="addDayTask(event, '${day}')" placeholder="+ Add to-do..." class="w-full bg-slate-900 border border-slate-700 rounded p-1.5 text-xs text-slate-300 focus:outline-none focus:border-indigo-500 mt-auto">
+                </div>`;
+            }).join('');
+        }
+
+        // --- 3. SUBJECT TRACKER & SUBTOPICS ---
+        const subjectNames = ["Anatomy", "Physiology", "Biochemistry", "Pathology", "Pharmacology", "Microbiology", "Forensic Medicine", "PSM", "ENT", "Ophthalmology", "Medicine", "Surgery", "OBG", "Pediatrics", "Orthopedics", "Dermatology", "Psychiatry", "Radiology", "Anesthesia"];
+        let subjectData = JSON.parse(localStorage.getItem('medPrepSubjects')) || {};
+        
+        subjectNames.forEach(sub => { 
+            if (!subjectData[sub]) subjectData[sub] = { rr: false, btr: false, qbMarrow: false, qbBtr: false, pyq: 0, gt: 0, score: "", subtopics: [] }; 
+            if (!subjectData[sub].subtopics) subjectData[sub].subtopics = [];
+        });
+
+        function saveSubjects() { localStorage.setItem('medPrepSubjects', JSON.stringify(subjectData)); }
+        function updateData(sub, field, val) { 
+            subjectData[sub][field] = val; saveSubjects(); 
+            if (field === 'pyq' || field === 'gt') document.getElementById(`${field}Val-${sub.replace(/\s/g, '')}`).innerText = val + '%';
+        }
+
+        function addSubtopic(e, sub, safe) {
+            if(e.key === 'Enter' && e.target.value.trim() !== '') {
+                subjectData[sub].subtopics.push({ text: e.target.value, done: false });
+                saveSubjects();
+                renderSubjects();
+                // Restore focus for continuous tablet typing
+                setTimeout(() => document.getElementById('subInput_' + safe).focus(), 10);
+            }
+        }
+        function toggleSubtopic(sub, idx) {
+            subjectData[sub].subtopics[idx].done = !subjectData[sub].subtopics[idx].done;
+            saveSubjects();
+            renderSubjects();
+        }
+        function removeSubtopic(sub, idx) {
+            subjectData[sub].subtopics.splice(idx, 1);
+            saveSubjects();
+            renderSubjects();
+        }
+
+        function renderSubjects() {
+            document.getElementById('subjectGrid').innerHTML = subjectNames.map(sub => {
+                const safe = sub.replace(/\s/g, ''); const data = subjectData[sub];
+                
+                const subtopicsHtml = data.subtopics.map((st, idx) => `
+                    <div class="flex items-center space-x-2 group py-0.5">
+                        <input type="checkbox" onchange="toggleSubtopic('${sub}', ${idx})" ${st.done ? 'checked' : ''} class="task-checkbox h-3.5 w-3.5 shrink-0 rounded border-slate-700 bg-slate-800 appearance-none cursor-pointer">
+                        <span class="text-xs ${st.done ? 'text-slate-500 line-through' : 'text-slate-300'} flex-1">${st.text}</span>
+                        <button onclick="removeSubtopic('${sub}', ${idx})" class="text-slate-600 hover:text-red-400 text-xs opacity-0 group-hover:opacity-100">×</button>
+                    </div>
+                `).join('');
+
+                return `
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-4 hover:border-slate-700 transition shadow-lg">
+                    <h3 class="font-bold text-base text-indigo-300 border-b border-slate-800 pb-2">${sub}</h3>
+                    <div class="grid grid-cols-2 gap-2 text-xs">
+                        <label class="flex items-center space-x-2"><input type="checkbox" onchange="updateData('${sub}', 'rr', this.checked)" ${data.rr?'checked':''} class="task-checkbox h-4 w-4 rounded border-slate-700 bg-slate-800 appearance-none"><span class="text-slate-300">RR/Main</span></label>
+                        <label class="flex items-center space-x-2"><input type="checkbox" onchange="updateData('${sub}', 'btr', this.checked)" ${data.btr?'checked':''} class="task-checkbox h-4 w-4 rounded border-slate-700 bg-slate-800 appearance-none"><span class="text-slate-300">BTR</span></label>
+                        <label class="flex items-center space-x-2"><input type="checkbox" onchange="updateData('${sub}', 'qbMarrow', this.checked)" ${data.qbMarrow?'checked':''} class="task-checkbox h-4 w-4 rounded border-slate-700 bg-slate-800 appearance-none"><span class="text-slate-300">QB Marrow</span></label>
+                        <label class="flex items-center space-x-2"><input type="checkbox" onchange="updateData('${sub}', 'qbBtr', this.checked)" ${data.qbBtr?'checked':''} class="task-checkbox h-4 w-4 rounded border-slate-700 bg-slate-800 appearance-none"><span class="text-slate-300">QB BTR</span></label>
+                    </div>
+                    <div class="space-y-3 pt-2">
+                        <div><div class="flex justify-between text-xs mb-1"><span class="text-slate-400">PYQ</span><span id="pyqVal-${safe}" class="font-bold text-indigo-400">${data.pyq}%</span></div><input type="range" min="0" max="100" value="${data.pyq}" oninput="updateData('${sub}', 'pyq', this.value)" class="w-full"></div>
+                        <div><div class="flex justify-between text-xs mb-1"><span class="text-slate-400">GT Progress</span><span id="gtVal-${safe}" class="font-bold text-indigo-400">${data.gt}%</span></div><input type="range" min="0" max="100" value="${data.gt}" oninput="updateData('${sub}', 'gt', this.value)" class="w-full"></div>
+                    </div>
+                    <div class="pt-2"><input type="text" placeholder="Latest GT Score" value="${data.score}" onchange="updateData('${sub}', 'score', this.value)" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-sm text-slate-200 focus:outline-none focus:border-indigo-500"></div>
+                    
+                    <!-- Dynamic Subtopics -->
+                    <div class="pt-3 border-t border-slate-800 space-y-2">
+                        <p class="text-xs font-semibold text-slate-400">Subject Subtopics</p>
+                        <div class="space-y-1">${subtopicsHtml}</div>
+                        <input id="subInput_${safe}" type="text" onkeypress="addSubtopic(event, '${sub}', '${safe}')" placeholder="+ Type subtopic & Enter..." class="w-full bg-transparent border-b border-slate-700 text-xs text-slate-300 focus:outline-none focus:border-indigo-500 pb-1">
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        // --- 4. 20 HIGH YIELD TOPICS (HYT) LOGIC ---
+        let hytData = JSON.parse(localStorage.getItem('medPrepHYT')) || [];
+
+        function addHYT(e) {
+            if(e.key === 'Enter' && e.target.value.trim() !== '') {
+                hytData.push({ text: e.target.value, done: false });
+                localStorage.setItem('medPrepHYT', JSON.stringify(hytData));
+                renderHYT();
+                // Restore focus for continuous tablet typing
+                setTimeout(() => document.getElementById('hytInput').focus(), 10);
+            }
+        }
+        function toggleHYT(idx) {
+            hytData[idx].done = !hytData[idx].done;
+            localStorage.setItem('medPrepHYT', JSON.stringify(hytData));
+            renderHYT();
+        }
+        function removeHYT(idx) {
+            hytData.splice(idx, 1);
+            localStorage.setItem('medPrepHYT', JSON.stringify(hytData));
+            renderHYT();
+        }
+
+        function renderHYT() {
+            document.getElementById('hytList').innerHTML = hytData.map((h, idx) => `
+                <div class="bg-slate-800/50 border border-slate-700 rounded-xl p-3 flex items-center justify-between group">
+                    <div class="flex items-center space-x-3">
+                        <input type="checkbox" onchange="toggleHYT(${idx})" ${h.done ? 'checked' : ''} class="task-checkbox h-5 w-5 rounded border-slate-600 bg-slate-700 appearance-none cursor-pointer">
+                        <span class="text-sm font-medium ${h.done ? 'text-slate-500 line-through' : 'text-slate-200'}">${h.text}</span>
+                    </div>
+                    <button onclick="removeHYT(${idx})" class="text-slate-500 hover:text-red-400 opacity-0 group-hover:opacity-100 transition">×</button>
+                </div>
+            `).join('');
+        }
+
+        // --- 5. MONTHLY & PHASES TEXT DATA ---
         function saveTextData() {
             const textData = {
                 wCT: document.getElementById('wCT').value,
-                wCTasks: document.getElementById('wCTasks').value,
                 wNT: document.getElementById('wNT').value,
                 wNTasks: document.getElementById('wNTasks').value,
                 mG1C: document.getElementById('mG1C').checked,
                 mG1T: document.getElementById('mG1T').value,
                 mG2C: document.getElementById('mG2C').checked,
-                mG2T: document.getElementById('mG2T').value,
-                dw_Mon: document.getElementById('dw_Mon').value,
-                dw_Tue: document.getElementById('dw_Tue').value,
-                dw_Wed: document.getElementById('dw_Wed').value,
-                dw_Thu: document.getElementById('dw_Thu').value,
-                dw_Fri: document.getElementById('dw_Fri').value,
-                dw_Sat: document.getElementById('dw_Sat').value,
-                dw_Sun: document.getElementById('dw_Sun').value
+                mG2T: document.getElementById('mG2T').value
             };
             localStorage.setItem('medPrepTextData', JSON.stringify(textData));
         }
@@ -314,56 +415,16 @@
             const textData = JSON.parse(localStorage.getItem('medPrepTextData'));
             if (textData) {
                 if (document.getElementById('wCT')) document.getElementById('wCT').value = textData.wCT || '';
-                if (document.getElementById('wCTasks')) document.getElementById('wCTasks').value = textData.wCTasks || '';
                 if (document.getElementById('wNT')) document.getElementById('wNT').value = textData.wNT || '';
                 if (document.getElementById('wNTasks')) document.getElementById('wNTasks').value = textData.wNTasks || '';
                 if (document.getElementById('mG1C')) document.getElementById('mG1C').checked = textData.mG1C || false;
                 if (document.getElementById('mG1T')) document.getElementById('mG1T').value = textData.mG1T || '';
                 if (document.getElementById('mG2C')) document.getElementById('mG2C').checked = textData.mG2C || false;
                 if (document.getElementById('mG2T')) document.getElementById('mG2T').value = textData.mG2T || '';
-                if (document.getElementById('dw_Mon')) document.getElementById('dw_Mon').value = textData.dw_Mon || '';
-                if (document.getElementById('dw_Tue')) document.getElementById('dw_Tue').value = textData.dw_Tue || '';
-                if (document.getElementById('dw_Wed')) document.getElementById('dw_Wed').value = textData.dw_Wed || '';
-                if (document.getElementById('dw_Thu')) document.getElementById('dw_Thu').value = textData.dw_Thu || '';
-                if (document.getElementById('dw_Fri')) document.getElementById('dw_Fri').value = textData.dw_Fri || '';
-                if (document.getElementById('dw_Sat')) document.getElementById('dw_Sat').value = textData.dw_Sat || '';
-                if (document.getElementById('dw_Sun')) document.getElementById('dw_Sun').value = textData.dw_Sun || '';
             }
         }
 
-        // --- 3. SUBJECT TRACKER LOGIC ---
-        const subjectNames = ["Anatomy", "Physiology", "Biochemistry", "Pathology", "Pharmacology", "Microbiology", "Forensic Medicine", "PSM", "ENT", "Ophthalmology", "Medicine", "Surgery", "OBG", "Pediatrics", "Orthopedics", "Dermatology", "Psychiatry", "Radiology", "Anesthesia"];
-        let subjectData = JSON.parse(localStorage.getItem('medPrepSubjects')) || {};
-        subjectNames.forEach(sub => { if (!subjectData[sub]) subjectData[sub] = { rr: false, btr: false, qbMarrow: false, qbBtr: false, pyq: 0, gt: 0, score: "" }; });
-
-        function saveSubjects() { localStorage.setItem('medPrepSubjects', JSON.stringify(subjectData)); }
-        function updateData(sub, field, val) { 
-            subjectData[sub][field] = val; saveSubjects(); 
-            if (field === 'pyq' || field === 'gt') document.getElementById(`${field}Val-${sub.replace(/\s/g, '')}`).innerText = val + '%';
-        }
-
-        function renderSubjects() {
-            document.getElementById('subjectGrid').innerHTML = subjectNames.map(sub => {
-                const safe = sub.replace(/\s/g, ''); const data = subjectData[sub];
-                return `
-                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-4 hover:border-slate-700 transition shadow-lg">
-                    <h3 class="font-bold text-base text-indigo-300 border-b border-slate-800 pb-2">${sub}</h3>
-                    <div class="grid grid-cols-2 gap-2 text-xs">
-                        <label class="flex items-center space-x-2"><input type="checkbox" onchange="updateData('${sub}', 'rr', this.checked)" ${data.rr?'checked':''} class="rounded border-slate-700 bg-slate-800 text-indigo-600 focus:ring-indigo-500"><span class="text-slate-300">RR/Main</span></label>
-                        <label class="flex items-center space-x-2"><input type="checkbox" onchange="updateData('${sub}', 'btr', this.checked)" ${data.btr?'checked':''} class="rounded border-slate-700 bg-slate-800 text-indigo-600 focus:ring-indigo-500"><span class="text-slate-300">BTR</span></label>
-                        <label class="flex items-center space-x-2"><input type="checkbox" onchange="updateData('${sub}', 'qbMarrow', this.checked)" ${data.qbMarrow?'checked':''} class="rounded border-slate-700 bg-slate-800 text-indigo-600 focus:ring-indigo-500"><span class="text-slate-300">QB (Marrow)</span></label>
-                        <label class="flex items-center space-x-2"><input type="checkbox" onchange="updateData('${sub}', 'qbBtr', this.checked)" ${data.qbBtr?'checked':''} class="rounded border-slate-700 bg-slate-800 text-indigo-600 focus:ring-indigo-500"><span class="text-slate-300">QB (BTR)</span></label>
-                    </div>
-                    <div class="space-y-3 pt-2">
-                        <div><div class="flex justify-between text-xs mb-1"><span class="text-slate-400">PYQ Progress</span><span id="pyqVal-${safe}" class="font-bold text-indigo-400">${data.pyq}%</span></div><input type="range" min="0" max="100" value="${data.pyq}" oninput="updateData('${sub}', 'pyq', this.value)" class="w-full"></div>
-                        <div><div class="flex justify-between text-xs mb-1"><span class="text-slate-400">GT Progress</span><span id="gtVal-${safe}" class="font-bold text-indigo-400">${data.gt}%</span></div><input type="range" min="0" max="100" value="${data.gt}" oninput="updateData('${sub}', 'gt', this.value)" class="w-full"></div>
-                    </div>
-                    <div class="pt-2"><input type="text" placeholder="Latest GT Score" value="${data.score}" onchange="updateData('${sub}', 'score', this.value)" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-sm text-slate-200 focus:outline-none focus:border-indigo-500"></div>
-                </div>`;
-            }).join('');
-        }
-
-        // --- 4. PHASES LOGIC ---
+        // Phases Selection
         const phaseDetails = {
             1: { title: "Phase 1: Core Clinical First Pass (Current -> Aug '26)", desc: "Focus on Major Clinical subjects paired with Pre-clinical links. Build strong notes and complete first-pass Q-Bank modules ahead of INI-Nov 2026. GT Frequency: 1 every 3-4 weeks." },
             2: { title: "Phase 2: Rapid Revision & INI Blitz (Sep - Oct '26)", desc: "Intensive high-yield tags review, custom Q-Bank modules of incorrect questions, and PYQs specific to INI-CET patterns. GT Frequency: 1 every 2 weeks." },
@@ -378,9 +439,9 @@
             document.getElementById('phaseDetailDesc').innerText = phaseDetails[id].desc;
         }
 
-        // --- 5. TAB NAVIGATION ---
+        // --- 6. TAB NAVIGATION ---
         function switchTab(tab) {
-            ['daily', 'weekly', 'subjects', 'phases', 'calendar'].forEach(t => {
+            ['daily', 'weekly', 'subjects', 'phases', 'hyt', 'calendar'].forEach(t => {
                 document.getElementById('panel-' + t).classList.add('hidden');
                 document.getElementById('tab-' + t).className = 'px-4 py-2 bg-slate-900 text-slate-400 hover:text-white rounded-xl text-xs font-semibold transition whitespace-nowrap';
             });
@@ -388,9 +449,11 @@
             document.getElementById('tab-' + tab).className = 'px-4 py-2 bg-indigo-600 text-white rounded-xl text-xs font-semibold shadow-lg shadow-indigo-600/20 transition whitespace-nowrap';
         }
 
-        // Initialize App
+        // Initialize Everything
         setShift('morning'); 
+        renderWeeklyDays();
         renderSubjects(); 
+        renderHYT();
         loadTextData(); 
         selectPhase(1);
     </script>
