@@ -8,7 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; }
-        .calendar-container iframe { width: 100%; height: 500px; border: 0; border-radius: 0.75rem; filter: invert(90%) hue-rotate(180deg); } /* Dark-mode friendly filter for calendar */
+        .calendar-container iframe { width: 100%; height: 500px; border: 0; border-radius: 0.75rem; filter: invert(90%) hue-rotate(180deg); }
     </style>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col">
@@ -38,7 +38,7 @@
             <!-- Shift Quick Controller -->
             <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-3 shadow-xl">
                 <h2 class="text-sm font-semibold tracking-wider text-slate-400 uppercase">PHC Duty Status</h2>
-                <p class="text-xs text-slate-400">Select your active duty mode to adapt task load:</p>
+                <p class="text-xs text-slate-400">Select active duty mode to adapt task load:</p>
                 
                 <div class="grid grid-cols-2 gap-2">
                     <button onclick="setShift('morning')" id="btn-morning" class="p-2.5 bg-indigo-600 text-white rounded-xl text-xs font-semibold text-center transition">Morning (9-3)</button>
@@ -50,7 +50,7 @@
 
             <!-- Exam Countdowns -->
             <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-4 shadow-xl">
-                <h2 class="text-sm font-semibold tracking-wider text-slate-400 uppercase">Exam Countdowns</h2>
+                <h2 class="text-sm font-semibold tracking-wider text-slate-400 uppercase">Exam Milestones</h2>
                 <div class="space-y-3">
                     <div class="p-3 bg-slate-800/50 rounded-xl border border-slate-700/50">
                         <div class="flex justify-between text-xs font-medium text-slate-400 mb-1">
@@ -63,11 +63,11 @@
                     </div>
                     <div class="p-3 bg-slate-800/50 rounded-xl border border-slate-700/50">
                         <div class="flex justify-between text-xs font-medium text-slate-400 mb-1">
-                            <span>NEET-PG '27</span>
-                            <span class="text-indigo-400 font-bold">Mid 2027</span>
+                            <span>INI-May '27 & NEET-PG '27</span>
+                            <span class="text-purple-400 font-bold">Mid 2027</span>
                         </div>
                         <div class="w-full bg-slate-700 h-2 rounded-full overflow-hidden">
-                            <div class="bg-purple-500 h-full w-[10%]"></div>
+                            <div class="bg-purple-500 h-full w-[15%]"></div>
                         </div>
                     </div>
                 </div>
@@ -79,20 +79,80 @@
             
             <!-- View Selector Tabs -->
             <div class="flex space-x-2 border-b border-slate-800 pb-3 overflow-x-auto">
-                <button onclick="switchTab('daily')" id="tab-daily" class="px-4 py-2 bg-indigo-600 text-white rounded-xl text-xs font-semibold shadow-lg shadow-indigo-600/20 transition whitespace-nowrap">Adapted Study Plan</button>
+                <button onclick="switchTab('daily')" id="tab-daily" class="px-4 py-2 bg-indigo-600 text-white rounded-xl text-xs font-semibold shadow-lg shadow-indigo-600/20 transition whitespace-nowrap">Adapted Daily Plan</button>
+                <button onclick="switchTab('phases')" id="tab-phases" class="px-4 py-2 bg-slate-900 text-slate-400 hover:text-white rounded-xl text-xs font-semibold transition whitespace-nowrap">🎯 Macro Phases & Curricula</button>
                 <button onclick="switchTab('calendar')" id="tab-calendar" class="px-4 py-2 bg-slate-900 text-slate-400 hover:text-white rounded-xl text-xs font-semibold transition whitespace-nowrap">📅 Live PHC Calendar Sync</button>
-                <button onclick="switchTab('monthly')" id="tab-monthly" class="px-4 py-2 bg-slate-900 text-slate-400 hover:text-white rounded-xl text-xs font-semibold transition whitespace-nowrap">Macro Roadmap</button>
             </div>
 
             <!-- Daily View Panel -->
             <div id="panel-daily" class="space-y-4">
                 <div class="flex items-center justify-between">
-                    <h2 id="planTitle" class="text-lg font-bold">Today's Adaptive Plan (Morning Shift Mode)</h2>
+                    <h2 id="planTitle" class="text-lg font-bold">Today's Adaptive Plan</h2>
                     <span class="text-xs text-slate-400 bg-slate-900 border border-slate-800 px-3 py-1 rounded-lg">Auto-adjusted for PHC Duties</span>
                 </div>
-
                 <div id="taskList" class="space-y-3">
-                    <!-- Dynamic tasks rendered via script based on shift -->
+                    <!-- Dynamic tasks rendered via script -->
+                </div>
+            </div>
+
+            <!-- Interactive Macro Phases Panel -->
+            <div id="panel-phases" class="space-y-4 hidden">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-lg font-bold">Preparation Phases & Roadmaps</h2>
+                    <span class="text-xs text-indigo-400 bg-indigo-500/10 border border-indigo-500/20 px-3 py-1 rounded-lg">Tap a phase to view plan details</span>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Phase 1 Card -->
+                    <div onclick="selectPhase(1)" id="phaseCard-1" class="bg-slate-900 border-2 border-indigo-500 rounded-2xl p-5 space-y-3 cursor-pointer transition shadow-xl">
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs bg-indigo-500/20 text-indigo-300 px-2.5 py-1 rounded-lg font-bold">Phase 1 • Active</span>
+                            <span class="text-xs text-slate-400">Target: INI-Nov '26</span>
+                        </div>
+                        <h3 class="font-bold text-base">Core Clinical & High-Yield First Pass</h3>
+                        <p class="text-xs text-slate-400">Building foundational video lecture modules, clinical notes annotation, and subject-wise Q-banks.</p>
+                    </div>
+
+                    <!-- Phase 2 Card -->
+                    <div onclick="selectPhase(2)" id="phaseCard-2" class="bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-2xl p-5 space-y-3 cursor-pointer transition shadow-xl">
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs bg-slate-800 text-slate-400 px-2.5 py-1 rounded-lg font-bold">Phase 2 • Upcoming</span>
+                            <span class="text-xs text-slate-400">Sep - Oct '26</span>
+                        </div>
+                        <h3 class="font-bold text-base">Rapid Revision & INI Blitz</h3>
+                        <p class="text-xs text-slate-400">High-yield revision tags, custom Q-bank modules, previous year recalled questions, and mock tests.</p>
+                    </div>
+
+                    <!-- Phase 3 Card -->
+                    <div onclick="selectPhase(3)" id="phaseCard-3" class="bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-2xl p-5 space-y-3 cursor-pointer transition shadow-xl">
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs bg-slate-800 text-slate-400 px-2.5 py-1 rounded-lg font-bold">Phase 3 • Future</span>
+                            <span class="text-xs text-slate-400">Dec '26 - Apr '27</span>
+                        </div>
+                        <h3 class="font-bold text-base">INI-May '27 & NEET-PG '27 Deep Integration</h3>
+                        <p class="text-xs text-slate-400">Advanced clinical scenario questions, multi-specialty integration, and grand test error analysis.</p>
+                    </div>
+
+                    <!-- Phase 4 Card -->
+                    <div onclick="selectPhase(4)" id="phaseCard-4" class="bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-2xl p-5 space-y-3 cursor-pointer transition shadow-xl">
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs bg-slate-800 text-slate-400 px-2.5 py-1 rounded-lg font-bold">Phase 4 • Final Sprint</span>
+                            <span class="text-xs text-slate-400">May '27 Onwards</span>
+                        </div>
+                        <h3 class="font-bold text-base">Final Grand Tests & High-Yield Blitz</h3>
+                        <p class="text-xs text-slate-400">High-intensity mock tests, formula/pharmacology table review, and mental endurance conditioning.</p>
+                    </div>
+                </div>
+
+                <!-- Detailed Phase View Box -->
+                <div id="phaseDetailBox" class="bg-slate-900 border border-indigo-500/30 rounded-2xl p-5 space-y-3 mt-4">
+                    <h3 id="phaseDetailTitle" class="font-bold text-base text-indigo-300">Phase 1 Execution Plan</h3>
+                    <p id="phaseDetailDesc" class="text-xs text-slate-300 leading-relaxed">Focus on Major Clinical subjects (Medicine, Surgery, OBG, Pediatrics) paired with Pre-clinical links. Maintain consistent daily Anki flashcard reviews alongside PHC duties.</p>
+                    <div class="pt-2 border-t border-slate-800 flex flex-wrap gap-2">
+                        <span class="text-xs bg-slate-800 text-slate-300 px-2.5 py-1 rounded">19 Subjects Rotation</span>
+                        <span class="text-xs bg-slate-800 text-slate-300 px-2.5 py-1 rounded">Marrow / PrepLadder Q-Banks</span>
+                        <span class="text-xs bg-slate-800 text-slate-300 px-2.5 py-1 rounded">Daily Spaced Repetition</span>
+                    </div>
                 </div>
             </div>
 
@@ -103,30 +163,15 @@
                     <span class="text-xs text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1 rounded-lg">Synced with Google Calendar</span>
                 </div>
                 <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 calendar-container">
-                    <!-- PASTE YOUR GOOGLE CALENDAR EMBED IFRAME SRC CODE BELOW -->
-                    <iframe src="https://calendar.google.com/calendar/embed?src=2a43860ddbb18d8d9a54351a39897c2156aea1c5359de87c47b516b9e2a6a6a7%40group.calendar.google.com&ctz=Asia%2FKolkata" style="border: 0" width="800" height="600" frameborder="0" scrolling="no"></iframe>
-                    <p class="text-xs text-slate-500 mt-3 text-center">Tip: Update your Google Calendar on your phone/tablet when your BMO informs you. It reflects here automatically.</p>
-                </div>
-            </div>
-
-            <!-- Monthly View Panel -->
-            <div id="panel-monthly" class="space-y-4 hidden">
-                <h2 class="text-lg font-bold">Macro Roadmap (Target: INI-Nov '26 & NEET-PG '27)</h2>
-                <div class="space-y-3">
-                    <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 flex justify-between items-center">
-                        <div>
-                            <p class="text-xs text-indigo-400 font-bold">Phase 1 (Active)</p>
-                            <h3 class="font-bold text-sm">Core Clinical & High-Yield Subject Pass</h3>
-                        </div>
-                        <span class="text-xs bg-indigo-600 text-white px-3 py-1 rounded-lg">In Progress</span>
-                    </div>
+                    <iframe src="https://calendar.google.com/calendar/embed?src=your_calendar_id%40group.calendar.google.com&ctz=Asia%2FKolkata" scrolling="no"></iframe>
+                    <p class="text-xs text-slate-500 mt-3 text-center">Tip: Update your Google Calendar on your tablet when your BMO informs you. It reflects here automatically.</p>
                 </div>
             </div>
 
         </div>
     </main>
 
-    <!-- Script to handle dynamic shift adaptations -->
+    <!-- Script to handle dynamic shift adaptations and phase viewing -->
     <script>
         const plans = {
             morning: {
@@ -169,6 +214,25 @@
             }
         };
 
+        const phaseDetails = {
+            1: {
+                title: "Phase 1: Core Clinical & High-Yield First Pass (Current -> Aug '26)",
+                desc: "Focus on Major Clinical subjects (Medicine, Surgery, OBG, Pediatrics) paired with Pre-clinical links. Build strong notes and complete first-pass Q-Bank modules ahead of INI-Nov 2026."
+            },
+            2: {
+                title: "Phase 2: Rapid Revision & INI Blitz (Sep - Oct '26)",
+                desc: "Intensive high-yield tags review, custom Q-Bank modules of incorrect questions, and previous year recalled questions (PYQs) specific to INI-CET patterns."
+            },
+            3: {
+                title: "Phase 3: INI-May '27 & NEET-PG '27 Deep Integration (Dec '26 - Apr '27)",
+                desc: "Expanding focus toward NEET-PG and INI-May 2027. Advanced clinical scenario questions, multi-specialty integration, and grand test simulations."
+            },
+            4: {
+                title: "Phase 4: Final Grand Test & High-Yield Blitz (May '27 Onwards)",
+                desc: "Peak performance sprint. Focus purely on grand tests, revision tables, high-yield image-based questions (IBQs), and exam temperament."
+            }
+        };
+
         function setShift(type) {
             ['morning', 'night', 'post', 'weekoff'].forEach(t => {
                 document.getElementById('btn-' + t).className = 'p-2.5 bg-slate-800 text-slate-300 hover:bg-slate-700 rounded-xl text-xs font-semibold text-center transition';
@@ -202,8 +266,19 @@
             document.getElementById('taskList').innerHTML = html;
         }
 
+        function selectPhase(id) {
+            [1, 2, 3, 4].forEach(n => {
+                document.getElementById('phaseCard-' + n).className = 'bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-2xl p-5 space-y-3 cursor-pointer transition shadow-xl';
+            });
+            document.getElementById('phaseCard-' + id).className = 'bg-slate-900 border-2 border-indigo-500 rounded-2xl p-5 space-y-3 cursor-pointer transition shadow-xl';
+            
+            const detail = phaseDetails[id];
+            document.getElementById('phaseDetailTitle').innerText = detail.title;
+            document.getElementById('phaseDetailDesc').innerText = detail.desc;
+        }
+
         function switchTab(tab) {
-            ['daily', 'calendar', 'monthly'].forEach(t => {
+            ['daily', 'phases', 'calendar'].forEach(t => {
                 document.getElementById('panel-' + t).classList.add('hidden');
                 document.getElementById('tab-' + t).className = 'px-4 py-2 bg-slate-900 text-slate-400 hover:text-white rounded-xl text-xs font-semibold transition whitespace-nowrap';
             });
@@ -211,7 +286,6 @@
             document.getElementById('tab-' + tab).className = 'px-4 py-2 bg-indigo-600 text-white rounded-xl text-xs font-semibold shadow-lg shadow-indigo-600/20 transition whitespace-nowrap';
         }
 
-        // Initialize with morning shift view
         setShift('morning');
     </script>
 </body>
