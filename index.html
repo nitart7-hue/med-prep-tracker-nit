@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MedPrep OS - Study Tracker</title>
+    <title>MedPrep OS - PHC Edition</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .calendar-container iframe { width: 100%; height: 500px; border: 0; border-radius: 0.75rem; filter: invert(90%) hue-rotate(180deg); } /* Dark-mode friendly filter for calendar */
     </style>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col">
@@ -17,50 +18,49 @@
         <div class="flex items-center space-x-3">
             <div class="h-9 w-9 bg-indigo-600 rounded-xl flex items-center justify-center font-bold text-white shadow-lg shadow-indigo-500/30">M</div>
             <div>
-                <h1 class="font-bold text-lg leading-tight">MedPrep OS</h1>
+                <h1 class="font-bold text-lg leading-tight">MedPrep OS <span class="text-xs text-indigo-400 font-normal">| PHC Officer</span></h1>
                 <p class="text-xs text-slate-400">INI-Nov '26 • INI-May '27 • NEET-PG '27</p>
             </div>
         </div>
-        <div class="flex items-center space-x-4">
-            <button onclick="toggleBurnoutMode()" id="burnoutBtn" class="px-3 py-1.5 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-lg text-xs font-semibold hover:bg-emerald-500/20 transition">
-                ⚡ Burnout Guard: ON
-            </button>
-            <div class="text-xs text-right hidden sm:block">
-                <p class="text-slate-400">Current Phase</p>
-                <p class="font-medium text-indigo-400">Foundation & Core Q-Banks</p>
+        <div class="flex items-center space-x-3">
+            <div class="text-right hidden sm:block">
+                <p class="text-xs text-slate-400">Active Shift Status</p>
+                <p id="currentShiftLabel" class="text-xs font-bold text-emerald-400">Morning Shift (9 AM - 3 PM)</p>
             </div>
         </div>
     </header>
 
     <!-- Main Container -->
-    <main class="flex-1 max-w-7xl w-full mx-auto p-6 grid grid-cols-1 lg:grid-cols-4 gap-6">
+    <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 grid grid-cols-1 lg:grid-cols-4 gap-6">
         
-        <!-- Left Sidebar: Milestones & Quick Stats -->
+        <!-- Left Sidebar: Shift Controller & Countdowns -->
         <div class="space-y-6">
+            <!-- Shift Quick Controller -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-3 shadow-xl">
+                <h2 class="text-sm font-semibold tracking-wider text-slate-400 uppercase">PHC Duty Status</h2>
+                <p class="text-xs text-slate-400">Select your active duty mode to adapt task load:</p>
+                
+                <div class="grid grid-cols-2 gap-2">
+                    <button onclick="setShift('morning')" id="btn-morning" class="p-2.5 bg-indigo-600 text-white rounded-xl text-xs font-semibold text-center transition">Morning (9-3)</button>
+                    <button onclick="setShift('night')" id="btn-night" class="p-2.5 bg-slate-800 text-slate-300 hover:bg-slate-700 rounded-xl text-xs font-semibold text-center transition">Night (3-9)</button>
+                    <button onclick="setShift('post')" id="btn-post" class="p-2.5 bg-slate-800 text-slate-300 hover:bg-slate-700 rounded-xl text-xs font-semibold text-center transition">Post-Duty Off</button>
+                    <button onclick="setShift('weekoff')" id="btn-weekoff" class="p-2.5 bg-slate-800 text-slate-300 hover:bg-slate-700 rounded-xl text-xs font-semibold text-center transition">Week Off</button>
+                </div>
+            </div>
+
+            <!-- Exam Countdowns -->
             <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-4 shadow-xl">
                 <h2 class="text-sm font-semibold tracking-wider text-slate-400 uppercase">Exam Countdowns</h2>
-                
                 <div class="space-y-3">
                     <div class="p-3 bg-slate-800/50 rounded-xl border border-slate-700/50">
                         <div class="flex justify-between text-xs font-medium text-slate-400 mb-1">
                             <span>INI-CET Nov '26</span>
-                            <span class="text-indigo-400 font-bold">Nov 1, 2026</span>
+                            <span class="text-indigo-400 font-bold">Nov 2026</span>
                         </div>
                         <div class="w-full bg-slate-700 h-2 rounded-full overflow-hidden">
                             <div class="bg-indigo-500 h-full w-[35%]"></div>
                         </div>
                     </div>
-
-                    <div class="p-3 bg-slate-800/50 rounded-xl border border-slate-700/50">
-                        <div class="flex justify-between text-xs font-medium text-slate-400 mb-1">
-                            <span>INI-CET May '27</span>
-                            <span class="text-indigo-400 font-bold">May 2027</span>
-                        </div>
-                        <div class="w-full bg-slate-700 h-2 rounded-full overflow-hidden">
-                            <div class="bg-blue-500 h-full w-[15%]"></div>
-                        </div>
-                    </div>
-
                     <div class="p-3 bg-slate-800/50 rounded-xl border border-slate-700/50">
                         <div class="flex justify-between text-xs font-medium text-slate-400 mb-1">
                             <span>NEET-PG '27</span>
@@ -72,130 +72,53 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Break Engine Box -->
-            <div class="bg-gradient-to-br from-indigo-950/40 to-slate-900 border border-indigo-500/20 rounded-2xl p-5 space-y-3">
-                <div class="flex items-center justify-between">
-                    <h3 class="font-semibold text-sm text-indigo-300">☕ Daily Break Engine</h3>
-                    <span class="text-xs bg-indigo-500/20 text-indigo-300 px-2 py-0.5 rounded">Active</span>
-                </div>
-                <p class="text-xs text-slate-400">Scheduled breaks safeguard your focus blocks. Don't skip your downtime!</p>
-                <div class="pt-2 border-t border-indigo-500/10 flex justify-between text-xs font-medium">
-                    <span class="text-slate-300">Next Short Break:</span>
-                    <span class="text-emerald-400 font-bold">In 35 mins (15m walk)</span>
-                </div>
-            </div>
         </div>
 
         <!-- Center/Right Content Area: Tracker Tabs -->
         <div class="lg:col-span-3 space-y-6">
             
             <!-- View Selector Tabs -->
-            <div class="flex space-x-2 border-b border-slate-800 pb-3">
-                <button onclick="switchTab('daily')" id="tab-daily" class="px-4 py-2 bg-indigo-600 text-white rounded-xl text-xs font-semibold shadow-lg shadow-indigo-600/20 transition">Daily Micro Tracker</button>
-                <button onclick="switchTab('weekly')" id="tab-weekly" class="px-4 py-2 bg-slate-900 text-slate-400 hover:text-white rounded-xl text-xs font-semibold transition">Weekly Meso Planner</button>
-                <button onclick="switchTab('monthly')" id="tab-monthly" class="px-4 py-2 bg-slate-900 text-slate-400 hover:text-white rounded-xl text-xs font-semibold transition">Monthly Macro Roadmaps</button>
+            <div class="flex space-x-2 border-b border-slate-800 pb-3 overflow-x-auto">
+                <button onclick="switchTab('daily')" id="tab-daily" class="px-4 py-2 bg-indigo-600 text-white rounded-xl text-xs font-semibold shadow-lg shadow-indigo-600/20 transition whitespace-nowrap">Adapted Study Plan</button>
+                <button onclick="switchTab('calendar')" id="tab-calendar" class="px-4 py-2 bg-slate-900 text-slate-400 hover:text-white rounded-xl text-xs font-semibold transition whitespace-nowrap">📅 Live PHC Calendar Sync</button>
+                <button onclick="switchTab('monthly')" id="tab-monthly" class="px-4 py-2 bg-slate-900 text-slate-400 hover:text-white rounded-xl text-xs font-semibold transition whitespace-nowrap">Macro Roadmap</button>
             </div>
 
             <!-- Daily View Panel -->
             <div id="panel-daily" class="space-y-4">
                 <div class="flex items-center justify-between">
-                    <h2 class="text-lg font-bold">Today's Schedule & Tasks</h2>
-                    <span class="text-xs text-slate-400 bg-slate-900 border border-slate-800 px-3 py-1 rounded-lg">19 Subjects Master Rotation</span>
+                    <h2 id="planTitle" class="text-lg font-bold">Today's Adaptive Plan (Morning Shift Mode)</h2>
+                    <span class="text-xs text-slate-400 bg-slate-900 border border-slate-800 px-3 py-1 rounded-lg">Auto-adjusted for PHC Duties</span>
                 </div>
 
-                <div class="space-y-3">
-                    <!-- Task Item -->
-                    <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 flex items-center justify-between hover:border-slate-700 transition">
-                        <div class="flex items-center space-x-3">
-                            <input type="checkbox" class="h-5 w-5 rounded border-slate-700 bg-slate-800 text-indigo-600 focus:ring-indigo-500">
-                            <div>
-                                <p class="text-sm font-semibold">General Medicine: CVS Pharmacology & ECG Review</p>
-                                <p class="text-xs text-slate-400">Block 1 • Deep Focus Video Lectures + Notes Annotation</p>
-                            </div>
-                        </div>
-                        <span class="text-xs px-2.5 py-1 bg-amber-500/10 text-amber-400 border border-amber-500/20 rounded-lg font-medium">High Yield</span>
-                    </div>
-
-                    <!-- Task Item -->
-                    <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 flex items-center justify-between hover:border-slate-700 transition">
-                        <div class="flex items-center space-x-3">
-                            <input type="checkbox" class="h-5 w-5 rounded border-slate-700 bg-slate-800 text-indigo-600 focus:ring-indigo-500">
-                            <div>
-                                <p class="text-sm font-semibold">Surgery Q-Bank: Gastrointestinal Tract (50 MCQs)</p>
-                                <p class="text-xs text-slate-400">Block 2 • Active Recall & Error Log review</p>
-                            </div>
-                        </div>
-                        <span class="text-xs px-2.5 py-1 bg-blue-500/10 text-blue-400 border border-blue-500/20 rounded-lg font-medium">Q-Bank</span>
-                    </div>
-
-                    <!-- Break Block -->
-                    <div class="bg-emerald-950/20 border border-emerald-500/20 rounded-xl p-4 flex items-center justify-between">
-                        <div class="flex items-center space-x-3">
-                            <input type="checkbox" checked disabled class="h-5 w-5 rounded border-emerald-700 bg-emerald-900 text-emerald-600">
-                            <div>
-                                <p class="text-sm font-semibold text-emerald-300">Mandatory Afternoon Reset & Long Break</p>
-                                <p class="text-xs text-emerald-400/70">Disconnect completely, hydrate, and stretch</p>
-                            </div>
-                        </div>
-                        <span class="text-xs px-2.5 py-1 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-lg font-medium">Rest Block</span>
-                    </div>
-
-                    <!-- Task Item -->
-                    <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 flex items-center justify-between hover:border-slate-700 transition">
-                        <div class="flex items-center space-x-3">
-                            <input type="checkbox" class="h-5 w-5 rounded border-slate-700 bg-slate-800 text-indigo-600 focus:ring-indigo-500">
-                            <div>
-                                <p class="text-sm font-semibold">Pathology & Microbiology Flashcards (Anki)</p>
-                                <p class="text-xs text-slate-400">Block 3 • Spaced Repetition Due Cards</p>
-                            </div>
-                        </div>
-                        <span class="text-xs px-2.5 py-1 bg-purple-500/10 text-purple-400 border border-purple-500/20 rounded-lg font-medium">Revision</span>
-                    </div>
+                <div id="taskList" class="space-y-3">
+                    <!-- Dynamic tasks rendered via script based on shift -->
                 </div>
             </div>
 
-            <!-- Weekly View Panel (Hidden by default) -->
-            <div id="panel-weekly" class="space-y-4 hidden">
-                <h2 class="text-lg font-bold">Weekly Subject Pairing Strategy</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 space-y-2">
-                        <span class="text-xs text-indigo-400 font-bold uppercase tracking-wider">Current Week</span>
-                        <h3 class="font-bold text-base">Cardiovascular & Respiratory Focus</h3>
-                        <p class="text-xs text-slate-400">Pairing General Medicine with Pathology, Pharmacology, and relevant Radiology IBQs.</p>
-                    </div>
-                    <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 space-y-2">
-                        <span class="text-xs text-slate-500 font-bold uppercase tracking-wider">Next Week</span>
-                        <h3 class="font-bold text-base">Abdominal Surgery & GI Tract</h3>
-                        <p class="text-xs text-slate-400">Pairing Surgery with Anatomy, Physiology, and localized Q-Bank modules.</p>
-                    </div>
+            <!-- Google Calendar View Panel -->
+            <div id="panel-calendar" class="space-y-4 hidden">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-lg font-bold">BMO Shift Schedule & Calendar</h2>
+                    <span class="text-xs text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1 rounded-lg">Synced with Google Calendar</span>
+                </div>
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 calendar-container">
+                    <!-- PASTE YOUR GOOGLE CALENDAR EMBED IFRAME SRC CODE BELOW -->
+                    <iframe src="https://calendar.google.com/calendar/embed?src=2a43860ddbb18d8d9a54351a39897c2156aea1c5359de87c47b516b9e2a6a6a7%40group.calendar.google.com&ctz=Asia%2FKolkata" style="border: 0" width="800" height="600" frameborder="0" scrolling="no"></iframe>
+                    <p class="text-xs text-slate-500 mt-3 text-center">Tip: Update your Google Calendar on your phone/tablet when your BMO informs you. It reflects here automatically.</p>
                 </div>
             </div>
 
-            <!-- Monthly View Panel (Hidden by default) -->
+            <!-- Monthly View Panel -->
             <div id="panel-monthly" class="space-y-4 hidden">
-                <h2 class="text-lg font-bold">Macro Roadmap (Target: INI-Nov '26)</h2>
+                <h2 class="text-lg font-bold">Macro Roadmap (Target: INI-Nov '26 & NEET-PG '27)</h2>
                 <div class="space-y-3">
                     <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 flex justify-between items-center">
                         <div>
                             <p class="text-xs text-indigo-400 font-bold">Phase 1 (Active)</p>
-                            <h3 class="font-bold text-sm">Core Clinical & Paraclinical First Pass</h3>
+                            <h3 class="font-bold text-sm">Core Clinical & High-Yield Subject Pass</h3>
                         </div>
                         <span class="text-xs bg-indigo-600 text-white px-3 py-1 rounded-lg">In Progress</span>
-                    </div>
-                    <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 flex justify-between items-center opacity-70">
-                        <div>
-                            <p class="text-xs text-slate-400 font-bold">Phase 2</p>
-                            <h3 class="font-bold text-sm">Rapid Revision, High-Yield Tags & Custom Modules</h3>
-                        </div>
-                        <span class="text-xs bg-slate-800 text-slate-400 px-3 py-1 rounded-lg">Upcoming</span>
-                    </div>
-                    <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 flex justify-between items-center opacity-70">
-                        <div>
-                            <p class="text-xs text-slate-400 font-bold">Phase 3</p>
-                            <h3 class="font-bold text-sm">INI-CET Grand Tests & Final 30-Day Sprint</h3>
-                        </div>
-                        <span class="text-xs bg-slate-800 text-slate-400 px-3 py-1 rounded-lg">Upcoming</span>
                     </div>
                 </div>
             </div>
@@ -203,29 +126,93 @@
         </div>
     </main>
 
-    <!-- Script to handle tab switching and UI toggles -->
+    <!-- Script to handle dynamic shift adaptations -->
     <script>
-        function switchTab(tab) {
-            ['daily', 'weekly', 'monthly'].forEach(t => {
-                document.getElementById('panel-' + t).classList.add('hidden');
-                document.getElementById('tab-' + t).className = 'px-4 py-2 bg-slate-900 text-slate-400 hover:text-white rounded-xl text-xs font-semibold transition';
+        const plans = {
+            morning: {
+                title: "Morning Shift Plan (9 AM - 3 PM Working)",
+                label: "Morning Shift (9 AM - 3 PM)",
+                tasks: [
+                    { title: "Early Morning High-Yield Review (6 AM - 8 AM)", sub: "2 hours of fresh-mind reading before heading to PHC", tag: "Deep Focus", color: "indigo" },
+                    { title: "PHC Duty Hours (9 AM - 3 PM)", sub: "Clinical practice & outpatient management", tag: "PHC Duty", color: "amber" },
+                    { title: "Evening Q-Bank Session (4 PM - 7 PM)", sub: "50-60 MCQs + Error notebook review", tag: "Q-Bank", color: "blue" },
+                    { title: "Flashcards / Spaced Repetition (8 PM - 9:30 PM)", sub: "Anki due reviews before sleep", tag: "Revision", color: "purple" }
+                ]
+            },
+            night: {
+                title: "Night Duty Plan (3 PM today to 9 AM tomorrow)",
+                label: "Night Duty (3 PM - 9 AM)",
+                tasks: [
+                    { title: "Pre-Night Shift Review & Audio/Video Blocks", sub: "Light active listening or rapid revision notes", tag: "Light Prep", color: "blue" },
+                    { title: "PHC Night Duty (3 PM - 9 AM Next Day)", sub: "Emergency care, deliveries, and night monitoring", tag: "Night Duty", color: "amber" },
+                    { title: "Rest & Recovery Block Scheduled", sub: "Exempt from evening study targets due to night shift", tag: "Rest Guard", color: "emerald" }
+                ]
+            },
+            post: {
+                title: "Post-Duty Off Plan (Starting 9 AM Today)",
+                label: "Post-Duty Off (Recovery + Catchup)",
+                tasks: [
+                    { title: "Mandatory Sleep & Recovery (Until 2 PM)", sub: "Crucial cognitive recovery post night shift", tag: "Rest Block", color: "emerald" },
+                    { title: "Afternoon Light Q-Bank (3 PM - 6 PM)", sub: "Low-stress question practice when energy returns", tag: "Q-Bank", color: "blue" },
+                    { title: "Evening Revision & Flashcards (7 PM - 9 PM)", sub: "Catching up on missed targets gently", tag: "Revision", color: "purple" }
+                ]
+            },
+            weekoff: {
+                title: "Week Off Full Sprint Plan (Full Day Free)",
+                label: "Full Week Off",
+                tasks: [
+                    { title: "Grand Test / Subject Mock Test (Morning)", sub: "Simulated 3-hour exam environment", tag: "Grand Test", color: "indigo" },
+                    { title: "Grand Test Detailed Analysis (Afternoon)", sub: "Reviewing every incorrect answer and rationale", tag: "Analysis", color: "amber" },
+                    { title: "Long Break & Outdoor Walk (Late Afternoon)", sub: "Burnout prevention & physical reset", tag: "Break", color: "emerald" },
+                    { title: "Core Subject Deep-Dive (Evening)", sub: "Heavy reading block for weak topics", tag: "Deep Focus", color: "purple" }
+                ]
+            }
+        };
+
+        function setShift(type) {
+            ['morning', 'night', 'post', 'weekoff'].forEach(t => {
+                document.getElementById('btn-' + t).className = 'p-2.5 bg-slate-800 text-slate-300 hover:bg-slate-700 rounded-xl text-xs font-semibold text-center transition';
             });
-            document.getElementById('panel-' + tab).classList.remove('hidden');
-            document.getElementById('tab-' + tab).className = 'px-4 py-2 bg-indigo-600 text-white rounded-xl text-xs font-semibold shadow-lg shadow-indigo-600/20 transition';
+            document.getElementById('btn-' + type).className = 'p-2.5 bg-indigo-600 text-white rounded-xl text-xs font-semibold text-center transition shadow-lg shadow-indigo-600/20';
+            
+            const current = plans[type];
+            document.getElementById('currentShiftLabel').innerText = current.label;
+            document.getElementById('planTitle').innerText = current.title;
+            
+            let html = '';
+            current.tasks.forEach(task => {
+                let badgeColor = 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20';
+                if(task.color === 'amber') badgeColor = 'bg-amber-500/10 text-amber-400 border-amber-500/20';
+                if(task.color === 'emerald') badgeColor = 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20';
+                if(task.color === 'blue') badgeColor = 'bg-blue-500/10 text-blue-400 border-blue-500/20';
+                if(task.color === 'purple') badgeColor = 'bg-purple-500/10 text-purple-400 border-purple-500/20';
+
+                html += `
+                <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 flex items-center justify-between hover:border-slate-700 transition">
+                    <div class="flex items-center space-x-3">
+                        <input type="checkbox" class="h-5 w-5 rounded border-slate-700 bg-slate-800 text-indigo-600 focus:ring-indigo-500">
+                        <div>
+                            <p class="text-sm font-semibold">${task.title}</p>
+                            <p class="text-xs text-slate-400">${task.sub}</p>
+                        </div>
+                    </div>
+                    <span class="text-xs px-2.5 py-1 border rounded-lg font-medium ${badgeColor}">${task.tag}</span>
+                </div>`;
+            });
+            document.getElementById('taskList').innerHTML = html;
         }
 
-        let burnoutActive = true;
-        function toggleBurnoutMode() {
-            burnoutActive = !burnoutActive;
-            const btn = document.getElementById('burnoutBtn');
-            if(burnoutActive) {
-                btn.className = 'px-3 py-1.5 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-lg text-xs font-semibold hover:bg-emerald-500/20 transition';
-                btn.innerHTML = '⚡ Burnout Guard: ON';
-            } else {
-                btn.className = 'px-3 py-1.5 bg-slate-800 text-slate-400 border border-slate-700 rounded-lg text-xs font-semibold transition';
-                btn.innerHTML = '⚡ Burnout Guard: OFF';
-            }
+        function switchTab(tab) {
+            ['daily', 'calendar', 'monthly'].forEach(t => {
+                document.getElementById('panel-' + t).classList.add('hidden');
+                document.getElementById('tab-' + t).className = 'px-4 py-2 bg-slate-900 text-slate-400 hover:text-white rounded-xl text-xs font-semibold transition whitespace-nowrap';
+            });
+            document.getElementById('panel-' + tab).classList.remove('hidden');
+            document.getElementById('tab-' + tab).className = 'px-4 py-2 bg-indigo-600 text-white rounded-xl text-xs font-semibold shadow-lg shadow-indigo-600/20 transition whitespace-nowrap';
         }
+
+        // Initialize with morning shift view
+        setShift('morning');
     </script>
 </body>
 </html>
