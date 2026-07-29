@@ -117,7 +117,10 @@
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-3 shadow-xl">
-                        <span class="text-xs text-indigo-400 font-bold uppercase tracking-wider">Current Week Target</span>
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-xs text-indigo-400 font-bold uppercase tracking-wider">Current Week Target</span>
+                            <button onclick="toggleDayWise()" class="text-xs bg-indigo-600 hover:bg-indigo-500 text-white px-3 py-1 rounded-lg transition shadow-md cursor-pointer">Day-Wise Plan</button>
+                        </div>
                         <input id="wCT" oninput="saveTextData()" type="text" placeholder="e.g., Med + Pharma" class="w-full bg-transparent border-b border-slate-700 text-base font-bold text-white focus:outline-none focus:border-indigo-500 pb-1 mb-2">
                         <p class="text-xs text-slate-400">List this week's goals below:</p>
                         <textarea id="wCTasks" oninput="saveTextData()" rows="4" placeholder="- Finish Medicine QBank&#10;- BTR Pharma Notes&#10;- 1 Grand Test" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-3 text-sm text-slate-200 focus:outline-none focus:border-indigo-500"></textarea>
@@ -127,6 +130,48 @@
                         <input id="wNT" oninput="saveTextData()" type="text" placeholder="e.g., Surgery + Anatomy" class="w-full bg-transparent border-b border-slate-700 text-base font-bold text-white focus:outline-none focus:border-slate-500 pb-1 mb-2">
                         <p class="text-xs text-slate-400">Plan ahead to maintain flow:</p>
                         <textarea id="wNTasks" oninput="saveTextData()" rows="4" placeholder="- Start Surgery RR&#10;- Anatomy PYQs" class="w-full bg-slate-800/50 border border-slate-700 rounded-lg p-3 text-sm text-slate-200 focus:outline-none focus:border-slate-500"></textarea>
+                    </div>
+                </div>
+
+                <!-- Expanded Day-wise View -->
+                <div id="dayWiseView" class="hidden bg-slate-900 border border-indigo-500/30 rounded-2xl p-5 shadow-xl mt-4 space-y-3">
+                    <h3 class="text-sm font-bold text-indigo-300 uppercase tracking-wider border-b border-slate-800 pb-2">Day-Wise To-Do Columns</h3>
+                    <div class="flex overflow-x-auto space-x-4 pb-2 scrollbar-hide">
+                        <!-- Monday -->
+                        <div class="min-w-[150px] bg-slate-800/50 rounded-xl p-3 border border-slate-700/50">
+                            <span class="text-xs font-bold text-slate-300 block mb-2 border-b border-slate-700 pb-1">Monday</span>
+                            <textarea id="dw_Mon" oninput="saveTextData()" rows="6" placeholder="To-do..." class="w-full bg-transparent border-none text-xs text-slate-300 focus:outline-none focus:ring-0 p-0 resize-none placeholder-slate-600"></textarea>
+                        </div>
+                        <!-- Tuesday -->
+                        <div class="min-w-[150px] bg-slate-800/50 rounded-xl p-3 border border-slate-700/50">
+                            <span class="text-xs font-bold text-slate-300 block mb-2 border-b border-slate-700 pb-1">Tuesday</span>
+                            <textarea id="dw_Tue" oninput="saveTextData()" rows="6" placeholder="To-do..." class="w-full bg-transparent border-none text-xs text-slate-300 focus:outline-none focus:ring-0 p-0 resize-none placeholder-slate-600"></textarea>
+                        </div>
+                        <!-- Wednesday -->
+                        <div class="min-w-[150px] bg-slate-800/50 rounded-xl p-3 border border-slate-700/50">
+                            <span class="text-xs font-bold text-slate-300 block mb-2 border-b border-slate-700 pb-1">Wednesday</span>
+                            <textarea id="dw_Wed" oninput="saveTextData()" rows="6" placeholder="To-do..." class="w-full bg-transparent border-none text-xs text-slate-300 focus:outline-none focus:ring-0 p-0 resize-none placeholder-slate-600"></textarea>
+                        </div>
+                        <!-- Thursday -->
+                        <div class="min-w-[150px] bg-slate-800/50 rounded-xl p-3 border border-slate-700/50">
+                            <span class="text-xs font-bold text-slate-300 block mb-2 border-b border-slate-700 pb-1">Thursday</span>
+                            <textarea id="dw_Thu" oninput="saveTextData()" rows="6" placeholder="To-do..." class="w-full bg-transparent border-none text-xs text-slate-300 focus:outline-none focus:ring-0 p-0 resize-none placeholder-slate-600"></textarea>
+                        </div>
+                        <!-- Friday -->
+                        <div class="min-w-[150px] bg-slate-800/50 rounded-xl p-3 border border-slate-700/50">
+                            <span class="text-xs font-bold text-slate-300 block mb-2 border-b border-slate-700 pb-1">Friday</span>
+                            <textarea id="dw_Fri" oninput="saveTextData()" rows="6" placeholder="To-do..." class="w-full bg-transparent border-none text-xs text-slate-300 focus:outline-none focus:ring-0 p-0 resize-none placeholder-slate-600"></textarea>
+                        </div>
+                        <!-- Saturday -->
+                        <div class="min-w-[150px] bg-slate-800/50 rounded-xl p-3 border border-slate-700/50">
+                            <span class="text-xs font-bold text-slate-300 block mb-2 border-b border-slate-700 pb-1">Saturday</span>
+                            <textarea id="dw_Sat" oninput="saveTextData()" rows="6" placeholder="To-do..." class="w-full bg-transparent border-none text-xs text-slate-300 focus:outline-none focus:ring-0 p-0 resize-none placeholder-slate-600"></textarea>
+                        </div>
+                        <!-- Sunday -->
+                        <div class="min-w-[150px] bg-slate-800/50 rounded-xl p-3 border border-slate-700/50">
+                            <span class="text-xs font-bold text-slate-300 block mb-2 border-b border-slate-700 pb-1">Sunday</span>
+                            <textarea id="dw_Sun" oninput="saveTextData()" rows="6" placeholder="To-do..." class="w-full bg-transparent border-none text-xs text-slate-300 focus:outline-none focus:ring-0 p-0 resize-none placeholder-slate-600"></textarea>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -194,7 +239,7 @@
                     <h2 class="text-lg font-bold">BMO Shift Schedule</h2>
                 </div>
                 <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 calendar-container">
-                   <iframe src="https://calendar.google.com/calendar/embed?src=2a43860ddbb18d8d9a54351a39897c2156aea1c5359de87c47b516b9e2a6a6a7%40group.calendar.google.com&ctz=Asia%2FKolkata" style="border: 0" width="800" height="600" frameborder="0" scrolling="no"></iframe>
+                    <iframe src="https://calendar.google.com/calendar/embed?src=2a43860ddbb18d8d9a54351a39897c2156aea1c5359de87c47b516b9e2a6a6a7%40group.calendar.google.com&ctz=Asia%2FKolkata" style="border: 0" width="800" height="600" frameborder="0" scrolling="no"></iframe>
                 </div>
             </div>
 
@@ -237,7 +282,13 @@
             }).join('');
         }
 
-        // --- 2. TEXT DATA STORAGE (Weekly & Monthly) ---
+        // --- 1.5. TOGGLE DAY WISE VIEW ---
+        function toggleDayWise() {
+            const el = document.getElementById('dayWiseView');
+            el.classList.toggle('hidden');
+        }
+
+        // --- 2. TEXT DATA STORAGE (Weekly, Monthly & Day-Wise) ---
         function saveTextData() {
             const textData = {
                 wCT: document.getElementById('wCT').value,
@@ -247,7 +298,14 @@
                 mG1C: document.getElementById('mG1C').checked,
                 mG1T: document.getElementById('mG1T').value,
                 mG2C: document.getElementById('mG2C').checked,
-                mG2T: document.getElementById('mG2T').value
+                mG2T: document.getElementById('mG2T').value,
+                dw_Mon: document.getElementById('dw_Mon').value,
+                dw_Tue: document.getElementById('dw_Tue').value,
+                dw_Wed: document.getElementById('dw_Wed').value,
+                dw_Thu: document.getElementById('dw_Thu').value,
+                dw_Fri: document.getElementById('dw_Fri').value,
+                dw_Sat: document.getElementById('dw_Sat').value,
+                dw_Sun: document.getElementById('dw_Sun').value
             };
             localStorage.setItem('medPrepTextData', JSON.stringify(textData));
         }
@@ -263,6 +321,13 @@
                 if (document.getElementById('mG1T')) document.getElementById('mG1T').value = textData.mG1T || '';
                 if (document.getElementById('mG2C')) document.getElementById('mG2C').checked = textData.mG2C || false;
                 if (document.getElementById('mG2T')) document.getElementById('mG2T').value = textData.mG2T || '';
+                if (document.getElementById('dw_Mon')) document.getElementById('dw_Mon').value = textData.dw_Mon || '';
+                if (document.getElementById('dw_Tue')) document.getElementById('dw_Tue').value = textData.dw_Tue || '';
+                if (document.getElementById('dw_Wed')) document.getElementById('dw_Wed').value = textData.dw_Wed || '';
+                if (document.getElementById('dw_Thu')) document.getElementById('dw_Thu').value = textData.dw_Thu || '';
+                if (document.getElementById('dw_Fri')) document.getElementById('dw_Fri').value = textData.dw_Fri || '';
+                if (document.getElementById('dw_Sat')) document.getElementById('dw_Sat').value = textData.dw_Sat || '';
+                if (document.getElementById('dw_Sun')) document.getElementById('dw_Sun').value = textData.dw_Sun || '';
             }
         }
 
