@@ -14,22 +14,23 @@
         input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 4px; cursor: pointer; background: #334155; border-radius: 2px; }
         .scrollbar-hide::-webkit-scrollbar { display: none; }
         .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
-        /* Custom checkbox styles */
         .task-checkbox:checked { background-color: #10b981; border-color: #10b981; background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3e%3c/svg%3e"); }
     </style>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col">
 
-    <!-- Top Navigation Bar -->
     <header class="border-b border-slate-800 bg-slate-900/50 backdrop-blur sticky top-0 z-50 px-6 py-4 flex items-center justify-between">
         <div class="flex items-center space-x-3">
             <div class="h-9 w-9 bg-indigo-600 rounded-xl flex items-center justify-center font-bold text-white shadow-lg shadow-indigo-500/30">M</div>
             <div>
                 <h1 class="font-bold text-lg leading-tight">MedPrep OS <span class="text-xs text-indigo-400 font-normal">| PHC Officer</span></h1>
-                <p class="text-xs text-slate-400">INI-Nov '26 • INI-May '27 • NEET-PG '27</p>
+                <p class="text-xs text-slate-400">🔥 Streak: <span id="streakCount" class="text-amber-400 font-bold">0</span> Days</p>
             </div>
         </div>
         <div class="flex items-center space-x-3">
+            <button onclick="toggleRecoveryMode()" id="btn-recovery" class="px-3 py-1.5 bg-slate-800 border border-slate-700 text-slate-400 hover:text-white rounded-lg text-xs font-semibold transition">
+                🤧 Recovery Mode: OFF
+            </button>
             <div class="text-right hidden sm:block">
                 <p class="text-xs text-slate-400">Active Shift Status</p>
                 <p id="currentShiftLabel" class="text-xs font-bold text-emerald-400">Morning Shift (9 AM - 3 PM)</p>
@@ -37,10 +38,8 @@
         </div>
     </header>
 
-    <!-- Main Container -->
     <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 grid grid-cols-1 lg:grid-cols-4 gap-6">
         
-        <!-- Left Sidebar: Shift Controller & Countdowns -->
         <div class="space-y-6">
             <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-3 shadow-xl">
                 <h2 class="text-sm font-semibold tracking-wider text-slate-400 uppercase">PHC Duty Status</h2>
@@ -71,10 +70,8 @@
             </div>
         </div>
 
-        <!-- Center/Right Content Area: Tracker Tabs -->
         <div class="lg:col-span-3 space-y-6">
             
-            <!-- View Selector Tabs -->
             <div class="flex space-x-2 border-b border-slate-800 pb-3 overflow-x-auto scrollbar-hide">
                 <button onclick="switchTab('daily')" id="tab-daily" class="px-4 py-2 bg-indigo-600 text-white rounded-xl text-xs font-semibold shadow-lg transition whitespace-nowrap">Daily Plan</button>
                 <button onclick="switchTab('weekly')" id="tab-weekly" class="px-4 py-2 bg-slate-900 text-slate-400 hover:text-white rounded-xl text-xs font-semibold transition whitespace-nowrap">🗓️ Weekly</button>
@@ -84,16 +81,18 @@
                 <button onclick="switchTab('calendar')" id="tab-calendar" class="px-4 py-2 bg-slate-900 text-slate-400 hover:text-white rounded-xl text-xs font-semibold transition whitespace-nowrap">📅 Calendar</button>
             </div>
 
-            <!-- Daily View Panel -->
             <div id="panel-daily" class="space-y-4">
                 <div class="flex items-center justify-between">
                     <h2 id="planTitle" class="text-lg font-bold">Today's Adaptive Plan</h2>
-                    <span class="text-xs text-slate-400 bg-slate-900 border border-slate-800 px-3 py-1 rounded-lg">Auto-adjusted for PHC Duties</span>
+                    <span class="text-xs text-slate-400 bg-slate-900 border border-slate-800 px-3 py-1 rounded-lg" id="dateDisplay">Date</span>
+                </div>
+                <div class="flex space-x-2">
+                    <input type="text" id="dailyInput" placeholder="Add a custom task for this shift..." class="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-4 py-2 text-sm text-slate-200 focus:outline-none focus:border-indigo-500">
+                    <button onclick="addDailyTaskClick()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-xl font-bold transition">+</button>
                 </div>
                 <div id="taskList" class="space-y-3"></div>
             </div>
 
-            <!-- Weekly View Panel -->
             <div id="panel-weekly" class="space-y-4 hidden">
                 <div class="flex items-center justify-between">
                     <h2 class="text-lg font-bold">Weekly Subject Strategy</h2>
@@ -110,21 +109,16 @@
                     <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-3 shadow-xl opacity-80">
                         <span class="text-xs text-slate-500 font-bold uppercase tracking-wider">Next Week Forecast</span>
                         <input id="wNT" oninput="saveTextData()" type="text" placeholder="e.g., Surgery + Anatomy" class="w-full bg-transparent border-b border-slate-700 text-base font-bold text-white focus:outline-none focus:border-slate-500 pb-1 mb-2">
-                        <p class="text-xs text-slate-400">Plan ahead to maintain flow:</p>
-                        <textarea id="wNTasks" oninput="saveTextData()" rows="4" placeholder="- Start Surgery RR&#10;- Anatomy PYQs" class="w-full bg-slate-800/50 border border-slate-700 rounded-lg p-3 text-sm text-slate-200 focus:outline-none focus:border-slate-500"></textarea>
                     </div>
                 </div>
 
-                <!-- Expanded Day-wise Checklists View -->
                 <div id="dayWiseView" class="hidden bg-slate-900 border border-indigo-500/30 rounded-2xl p-5 shadow-xl mt-4 space-y-3">
                     <h3 class="text-sm font-bold text-indigo-300 uppercase tracking-wider border-b border-slate-800 pb-2">Day-Wise To-Do Columns</h3>
                     <div class="flex overflow-x-auto space-x-4 pb-2 scrollbar-hide" id="weeklyDaysContainer">
-                        <!-- Dynamically populated by JS -->
-                    </div>
+                        </div>
                 </div>
             </div>
 
-            <!-- Subject Tracker Panel -->
             <div id="panel-subjects" class="space-y-4 hidden">
                 <div class="flex items-center justify-between">
                     <h2 class="text-lg font-bold">19 Subjects Master Checklist</h2>
@@ -133,23 +127,23 @@
                 <div id="subjectGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
             </div>
 
-            <!-- 20 HYT Panel -->
             <div id="panel-hyt" class="space-y-4 hidden">
                 <div class="flex items-center justify-between">
                     <h2 class="text-lg font-bold">🔥 20 High Yield Topics (HYT)</h2>
                     <span class="text-xs text-amber-400 bg-amber-500/10 border border-amber-500/20 px-3 py-1 rounded-lg">Must complete before exam</span>
                 </div>
                 <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4">
-                    <input type="text" id="hytInput" onkeypress="addHYT(event)" placeholder="+ Type an HYT and press Enter..." class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-sm text-slate-200 focus:outline-none focus:border-indigo-500">
+                    <div class="flex space-x-2">
+                        <input type="text" id="hytInput" placeholder="Type an HYT..." class="flex-1 bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-sm text-slate-200 focus:outline-none focus:border-indigo-500">
+                        <button onclick="addHYTClick()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-5 py-3 rounded-xl font-bold transition">+</button>
+                    </div>
                     <div id="hytList" class="space-y-2"></div>
                 </div>
             </div>
 
-            <!-- Interactive Macro Phases & Monthly Panel -->
             <div id="panel-phases" class="space-y-4 hidden">
                 <div class="flex items-center justify-between">
                     <h2 class="text-lg font-bold">Monthly Goals & Macro Phases</h2>
-                    <span class="text-xs text-indigo-400 bg-indigo-500/10 border border-indigo-500/20 px-3 py-1 rounded-lg">Tap a phase to view details</span>
                 </div>
                 <div class="bg-gradient-to-r from-indigo-900/40 to-slate-900 border border-indigo-500/30 rounded-2xl p-5 space-y-3 mb-6 shadow-xl">
                     <h3 class="font-bold text-sm text-indigo-300 uppercase tracking-wider border-b border-indigo-500/20 pb-2">Current Month's Major Milestones</h3>
@@ -176,7 +170,6 @@
                 </div>
             </div>
 
-            <!-- Calendar View Panel -->
             <div id="panel-calendar" class="space-y-4 hidden">
                 <div class="flex items-center justify-between"><h2 class="text-lg font-bold">BMO Shift Schedule</h2></div>
                 <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 calendar-container">
@@ -188,17 +181,87 @@
     </main>
 
     <script>
+        // --- 0. GLOBAL STATE & STREAK LOGIC ---
         let currentActiveShift = 'morning';
+        let recoveryMode = false;
+        
+        // Date Reset Logic
+        const todayStr = new Date().toDateString();
+        document.getElementById('dateDisplay').innerText = todayStr;
+        
+        let lastLogin = localStorage.getItem('medPrepLastDate');
+        let dailyTicks = JSON.parse(localStorage.getItem('medPrepDailyTicks')) || {};
+        let streak = parseInt(localStorage.getItem('medPrepStreak')) || 0;
 
-        // --- 1. DAILY PLAN LOGIC (With Strike-through Checkboxes) ---
-        const plans = {
-            morning: { label: "Morning Shift (9 AM - 3 PM)", title: "Morning Shift Plan", tasks: [{ title: "Morning Review", sub: "Deep Focus", tag: "Study", color: "indigo" }, { title: "PHC Duty", sub: "9 AM - 3 PM", tag: "Duty", color: "amber" }, { title: "Evening Q-Bank", sub: "Error Notebook", tag: "Q-Bank", color: "blue" }] },
-            night: { label: "Night Duty (3 PM - 9 AM)", title: "Night Duty Plan", tasks: [{ title: "Pre-Night Prep", sub: "Audio/Video Notes", tag: "Prep", color: "blue" }, { title: "PHC Night Duty", sub: "3 PM - 9 AM Next Day", tag: "Duty", color: "amber" }, { title: "Rest & Recovery", sub: "Mandatory", tag: "Rest", color: "emerald" }] },
-            post: { label: "Post-Duty Off", title: "Post-Duty Off Plan", tasks: [{ title: "Mandatory Sleep", sub: "Until 2 PM", tag: "Rest", color: "emerald" }, { title: "Afternoon Q-Bank", sub: "Low stress", tag: "Q-Bank", color: "blue" }, { title: "Evening Flashcards", sub: "Catchup", tag: "Revision", color: "purple" }] },
-            weekoff: { label: "Full Week Off", title: "Week Off Sprint Plan", tasks: [{ title: "Grand Test", sub: "3-hour block", tag: "GT", color: "indigo" }, { title: "Test Analysis", sub: "Review Errors", tag: "Review", color: "amber" }, { title: "Core Subject Deep Dive", sub: "Evening", tag: "Focus", color: "purple" }] }
+        if (lastLogin !== todayStr) {
+            // New Day - Reset daily checkboxes
+            dailyTicks = {}; 
+            localStorage.setItem('medPrepDailyTicks', JSON.stringify(dailyTicks));
+            
+            // Streak logic (rudimentary)
+            if (lastLogin) {
+                const lastDate = new Date(lastLogin);
+                const todayDate = new Date(todayStr);
+                const diffTime = Math.abs(todayDate - lastDate);
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+                if (diffDays === 1) streak++;
+                else streak = 1;
+            } else {
+                streak = 1;
+            }
+            localStorage.setItem('medPrepStreak', streak);
+            localStorage.setItem('medPrepLastDate', todayStr);
+        }
+        document.getElementById('streakCount').innerText = streak;
+
+        function toggleRecoveryMode() {
+            recoveryMode = !recoveryMode;
+            const btn = document.getElementById('btn-recovery');
+            if(recoveryMode) {
+                btn.classList.replace('bg-slate-800', 'bg-rose-500/20');
+                btn.classList.replace('text-slate-400', 'text-rose-400');
+                btn.innerText = '🤧 Recovery Mode: ON';
+            } else {
+                btn.classList.replace('bg-rose-500/20', 'bg-slate-800');
+                btn.classList.replace('text-rose-400', 'text-slate-400');
+                btn.innerText = '🤧 Recovery Mode: OFF';
+            }
+            setShift(currentActiveShift); // re-render UI
+        }
+
+        // --- 1. DAILY PLAN LOGIC (Editable & Resetting) ---
+        const defaultPlans = {
+            morning: { label: "Morning Shift (9 AM - 3 PM)", title: "Morning Shift Plan", tasks: [{ title: "Morning Review", sub: "Deep Focus", tag: "Study", color: "indigo", essential: true }, { title: "PHC Duty", sub: "9 AM - 3 PM", tag: "Duty", color: "amber", essential: true }, { title: "Evening Q-Bank", sub: "Error Notebook", tag: "Q-Bank", color: "blue", essential: false }] },
+            night: { label: "Night Duty (3 PM - 9 AM)", title: "Night Duty Plan", tasks: [{ title: "Pre-Night Prep", sub: "Audio/Video Notes", tag: "Prep", color: "blue", essential: false }, { title: "PHC Night Duty", sub: "3 PM - 9 AM Next Day", tag: "Duty", color: "amber", essential: true }, { title: "Rest & Recovery", sub: "Mandatory", tag: "Rest", color: "emerald", essential: true }] },
+            post: { label: "Post-Duty Off", title: "Post-Duty Off Plan", tasks: [{ title: "Mandatory Sleep", sub: "Until 2 PM", tag: "Rest", color: "emerald", essential: true }, { title: "Afternoon Q-Bank", sub: "Low stress", tag: "Q-Bank", color: "blue", essential: false }, { title: "Evening Flashcards", sub: "Catchup", tag: "Revision", color: "purple", essential: true }] },
+            weekoff: { label: "Full Week Off", title: "Week Off Sprint Plan", tasks: [{ title: "Grand Test", sub: "3-hour block", tag: "GT", color: "indigo", essential: true }, { title: "Test Analysis", sub: "Review Errors", tag: "Review", color: "amber", essential: true }, { title: "Core Subject Deep Dive", sub: "Evening", tag: "Focus", color: "purple", essential: false }] }
         };
 
-        let dailyTicks = JSON.parse(localStorage.getItem('medPrepDailyTicks')) || {};
+        let userPlans = JSON.parse(localStorage.getItem('medPrepPlans')) || defaultPlans;
+
+        function saveUserPlans() { localStorage.setItem('medPrepPlans', JSON.stringify(userPlans)); }
+
+        function addDailyTaskClick() {
+            const input = document.getElementById('dailyInput');
+            if (input.value.trim() !== '') {
+                userPlans[currentActiveShift].tasks.push({
+                    title: input.value,
+                    sub: "Custom Task",
+                    tag: "Custom",
+                    color: "indigo",
+                    essential: false
+                });
+                saveUserPlans();
+                input.value = '';
+                setShift(currentActiveShift);
+            }
+        }
+
+        function removeDailyTask(shift, idx) {
+            userPlans[shift].tasks.splice(idx, 1);
+            saveUserPlans();
+            setShift(currentActiveShift);
+        }
 
         function toggleDailyTask(shift, idx) {
             const key = `${shift}_${idx}`;
@@ -216,7 +279,7 @@
             btn.classList.replace('bg-slate-800', 'bg-indigo-600');
             btn.classList.add('text-white', 'shadow-lg', 'shadow-indigo-600/20');
             
-            const current = plans[type];
+            const current = userPlans[type];
             document.getElementById('currentShiftLabel').innerText = current.label;
             document.getElementById('planTitle').innerText = current.title;
             
@@ -224,6 +287,10 @@
                 const key = `${type}_${idx}`;
                 const isDone = dailyTicks[key];
                 
+                // Recovery mode visual filter
+                const isSkippedInRecovery = recoveryMode && !task.essential;
+                const opacityClass = isSkippedInRecovery ? 'opacity-30' : 'opacity-100';
+
                 let tagClass = 'text-indigo-400 border-indigo-500/20 bg-indigo-500/10';
                 if(task.color === 'amber') tagClass = 'text-amber-400 border-amber-500/20 bg-amber-500/10';
                 if(task.color === 'emerald') tagClass = 'text-emerald-400 border-emerald-500/20 bg-emerald-500/10';
@@ -234,7 +301,7 @@
                 const subClass = isDone ? 'text-emerald-500/50 line-through' : 'text-slate-400';
                 
                 return `
-                <div class="bg-slate-900 border ${isDone ? 'border-emerald-500/30 bg-emerald-950/10' : 'border-slate-800 hover:border-slate-700'} rounded-xl p-4 flex items-center justify-between transition">
+                <div class="bg-slate-900 border ${isDone ? 'border-emerald-500/30 bg-emerald-950/10' : 'border-slate-800 hover:border-slate-700'} rounded-xl p-4 flex items-center justify-between transition group ${opacityClass}">
                     <div class="flex items-center space-x-3">
                         <input type="checkbox" onchange="toggleDailyTask('${type}', ${idx})" ${isDone ? 'checked' : ''} class="task-checkbox h-5 w-5 rounded border-slate-700 bg-slate-800 appearance-none outline-none transition cursor-pointer">
                         <div>
@@ -242,22 +309,25 @@
                             <p class="text-xs ${subClass} transition">${task.sub}</p>
                         </div>
                     </div>
-                    <span class="text-xs px-2.5 py-1 border rounded-lg font-medium ${tagClass}">${task.tag}</span>
+                    <div class="flex items-center space-x-3">
+                        <span class="text-xs px-2.5 py-1 border rounded-lg font-medium ${tagClass}">${isSkippedInRecovery ? 'Skip' : task.tag}</span>
+                        <button onclick="removeDailyTask('${type}', ${idx})" class="text-slate-500 hover:text-red-400 opacity-0 group-hover:opacity-100 transition">×</button>
+                    </div>
                 </div>`;
             }).join('');
         }
 
-        // --- 2. WEEKLY DAY-WISE CHECKLISTS ---
+        // --- 2. WEEKLY DAY-WISE CHECKLISTS (With Buttons) ---
         const daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
         let weeklyDays = JSON.parse(localStorage.getItem('medPrepWeeklyDays')) || { Mon:[], Tue:[], Wed:[], Thu:[], Fri:[], Sat:[], Sun:[] };
 
-        function addDayTask(e, day) {
-            if(e.key === 'Enter' && e.target.value.trim() !== '') {
-                weeklyDays[day].push({ text: e.target.value, done: false });
+        function addDayTaskClick(day) {
+            const input = document.getElementById('dayInput_' + day);
+            if (input.value.trim() !== '') {
+                weeklyDays[day].push({ text: input.value, done: false });
                 localStorage.setItem('medPrepWeeklyDays', JSON.stringify(weeklyDays));
                 renderWeeklyDays();
-                // Restore focus for continuous tablet typing
-                setTimeout(() => document.getElementById('dayInput_' + day).focus(), 10);
+                input.value = ''; // manual clear since we redraw the parent
             }
         }
         function toggleDayTask(day, idx) {
@@ -282,36 +352,38 @@
                 `).join('');
                 
                 return `
-                <div class="min-w-[180px] bg-slate-800/50 rounded-xl p-3 border border-slate-700/50 flex flex-col h-64">
+                <div class="min-w-[190px] bg-slate-800/50 rounded-xl p-3 border border-slate-700/50 flex flex-col h-64">
                     <span class="text-xs font-bold text-slate-300 block mb-2 border-b border-slate-700 pb-1">${day}</span>
                     <div class="flex-1 overflow-y-auto scrollbar-hide space-y-1 mb-2">${tasksHtml}</div>
-                    <input id="dayInput_${day}" type="text" onkeypress="addDayTask(event, '${day}')" placeholder="+ Add to-do..." class="w-full bg-slate-900 border border-slate-700 rounded p-1.5 text-xs text-slate-300 focus:outline-none focus:border-indigo-500 mt-auto">
+                    <div class="flex mt-auto space-x-1">
+                        <input id="dayInput_${day}" type="text" placeholder="Add..." class="w-full bg-slate-900 border border-slate-700 rounded p-1.5 text-xs text-slate-300 focus:outline-none focus:border-indigo-500">
+                        <button onclick="addDayTaskClick('${day}')" class="bg-indigo-600 hover:bg-indigo-500 text-white px-2 rounded font-bold transition">+</button>
+                    </div>
                 </div>`;
             }).join('');
         }
 
-        // --- 3. SUBJECT TRACKER & SUBTOPICS ---
+        // --- 3. SUBJECT TRACKER (GT Progress Removed, With Buttons) ---
         const subjectNames = ["Anatomy", "Physiology", "Biochemistry", "Pathology", "Pharmacology", "Microbiology", "Forensic Medicine", "PSM", "ENT", "Ophthalmology", "Medicine", "Surgery", "OBG", "Pediatrics", "Orthopedics", "Dermatology", "Psychiatry", "Radiology", "Anesthesia"];
         let subjectData = JSON.parse(localStorage.getItem('medPrepSubjects')) || {};
         
         subjectNames.forEach(sub => { 
-            if (!subjectData[sub]) subjectData[sub] = { rr: false, btr: false, qbMarrow: false, qbBtr: false, pyq: 0, gt: 0, score: "", subtopics: [] }; 
+            if (!subjectData[sub]) subjectData[sub] = { rr: false, btr: false, qbMarrow: false, qbBtr: false, pyq: 0, subtopics: [] }; 
             if (!subjectData[sub].subtopics) subjectData[sub].subtopics = [];
         });
 
         function saveSubjects() { localStorage.setItem('medPrepSubjects', JSON.stringify(subjectData)); }
         function updateData(sub, field, val) { 
             subjectData[sub][field] = val; saveSubjects(); 
-            if (field === 'pyq' || field === 'gt') document.getElementById(`${field}Val-${sub.replace(/\s/g, '')}`).innerText = val + '%';
+            if (field === 'pyq') document.getElementById(`pyqVal-${sub.replace(/\s/g, '')}`).innerText = val + '%';
         }
 
-        function addSubtopic(e, sub, safe) {
-            if(e.key === 'Enter' && e.target.value.trim() !== '') {
-                subjectData[sub].subtopics.push({ text: e.target.value, done: false });
+        function addSubtopicClick(sub, safe) {
+            const input = document.getElementById('subInput_' + safe);
+            if (input.value.trim() !== '') {
+                subjectData[sub].subtopics.push({ text: input.value, done: false });
                 saveSubjects();
                 renderSubjects();
-                // Restore focus for continuous tablet typing
-                setTimeout(() => document.getElementById('subInput_' + safe).focus(), 10);
             }
         }
         function toggleSubtopic(sub, idx) {
@@ -348,30 +420,30 @@
                     </div>
                     <div class="space-y-3 pt-2">
                         <div><div class="flex justify-between text-xs mb-1"><span class="text-slate-400">PYQ</span><span id="pyqVal-${safe}" class="font-bold text-indigo-400">${data.pyq}%</span></div><input type="range" min="0" max="100" value="${data.pyq}" oninput="updateData('${sub}', 'pyq', this.value)" class="w-full"></div>
-                        <div><div class="flex justify-between text-xs mb-1"><span class="text-slate-400">GT Progress</span><span id="gtVal-${safe}" class="font-bold text-indigo-400">${data.gt}%</span></div><input type="range" min="0" max="100" value="${data.gt}" oninput="updateData('${sub}', 'gt', this.value)" class="w-full"></div>
                     </div>
-                    <div class="pt-2"><input type="text" placeholder="Latest GT Score" value="${data.score}" onchange="updateData('${sub}', 'score', this.value)" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-sm text-slate-200 focus:outline-none focus:border-indigo-500"></div>
                     
-                    <!-- Dynamic Subtopics -->
                     <div class="pt-3 border-t border-slate-800 space-y-2">
                         <p class="text-xs font-semibold text-slate-400">Subject Subtopics</p>
                         <div class="space-y-1">${subtopicsHtml}</div>
-                        <input id="subInput_${safe}" type="text" onkeypress="addSubtopic(event, '${sub}', '${safe}')" placeholder="+ Type subtopic & Enter..." class="w-full bg-transparent border-b border-slate-700 text-xs text-slate-300 focus:outline-none focus:border-indigo-500 pb-1">
+                        <div class="flex space-x-2">
+                            <input id="subInput_${safe}" type="text" placeholder="Add subtopic..." class="flex-1 bg-transparent border-b border-slate-700 text-xs text-slate-300 focus:outline-none focus:border-indigo-500 pb-1">
+                            <button onclick="addSubtopicClick('${sub}', '${safe}')" class="text-xs bg-slate-800 hover:bg-slate-700 text-white px-2 py-1 rounded transition">+</button>
+                        </div>
                     </div>
                 </div>`;
             }).join('');
         }
 
-        // --- 4. 20 HIGH YIELD TOPICS (HYT) LOGIC ---
+        // --- 4. 20 HIGH YIELD TOPICS (HYT) LOGIC (With Button) ---
         let hytData = JSON.parse(localStorage.getItem('medPrepHYT')) || [];
 
-        function addHYT(e) {
-            if(e.key === 'Enter' && e.target.value.trim() !== '') {
-                hytData.push({ text: e.target.value, done: false });
+        function addHYTClick() {
+            const input = document.getElementById('hytInput');
+            if (input.value.trim() !== '') {
+                hytData.push({ text: input.value, done: false });
                 localStorage.setItem('medPrepHYT', JSON.stringify(hytData));
+                input.value = '';
                 renderHYT();
-                // Restore focus for continuous tablet typing
-                setTimeout(() => document.getElementById('hytInput').focus(), 10);
             }
         }
         function toggleHYT(idx) {
@@ -402,7 +474,6 @@
             const textData = {
                 wCT: document.getElementById('wCT').value,
                 wNT: document.getElementById('wNT').value,
-                wNTasks: document.getElementById('wNTasks').value,
                 mG1C: document.getElementById('mG1C').checked,
                 mG1T: document.getElementById('mG1T').value,
                 mG2C: document.getElementById('mG2C').checked,
@@ -416,7 +487,6 @@
             if (textData) {
                 if (document.getElementById('wCT')) document.getElementById('wCT').value = textData.wCT || '';
                 if (document.getElementById('wNT')) document.getElementById('wNT').value = textData.wNT || '';
-                if (document.getElementById('wNTasks')) document.getElementById('wNTasks').value = textData.wNTasks || '';
                 if (document.getElementById('mG1C')) document.getElementById('mG1C').checked = textData.mG1C || false;
                 if (document.getElementById('mG1T')) document.getElementById('mG1T').value = textData.mG1T || '';
                 if (document.getElementById('mG2C')) document.getElementById('mG2C').checked = textData.mG2C || false;
@@ -424,7 +494,6 @@
             }
         }
 
-        // Phases Selection
         const phaseDetails = {
             1: { title: "Phase 1: Core Clinical First Pass (Current -> Aug '26)", desc: "Focus on Major Clinical subjects paired with Pre-clinical links. Build strong notes and complete first-pass Q-Bank modules ahead of INI-Nov 2026. GT Frequency: 1 every 3-4 weeks." },
             2: { title: "Phase 2: Rapid Revision & INI Blitz (Sep - Oct '26)", desc: "Intensive high-yield tags review, custom Q-Bank modules of incorrect questions, and PYQs specific to INI-CET patterns. GT Frequency: 1 every 2 weeks." },
@@ -459,3 +528,4 @@
     </script>
 </body>
 </html>
+
