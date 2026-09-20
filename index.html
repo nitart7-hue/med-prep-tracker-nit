@@ -229,15 +229,19 @@
             localStorage.setItem('medPrepDailyTicks', JSON.stringify(dailyTicks));
             
             if (lastLogin) {
-    const lastDate = new Date(lastLogin);
-    const currentDate = new Date(todayStr); // Forces today's time to midnight
-    const diffTime = Math.abs(currentDate - lastDate);
-    const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24)); // Uses round instead of ceil
-                if (diffDays === 1) streak++;
-                else streak = 1;
+                const lastDate = new Date(lastLogin);
+                const currentDate = new Date(todayStr); // Forces midnight parsing
+                const diffTime = Math.abs(currentDate - lastDate);
+                const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24)); // Uses round instead of ceil
+                if (diffDays === 1) {
+                    streak++;
+                } else {
+                    streak = 1;
+                }
             } else {
                 streak = 1;
             }
+            
             localStorage.setItem('medPrepStreak', streak);
             localStorage.setItem('medPrepLastDate', todayStr);
         }
@@ -357,7 +361,7 @@
                 const subClass = isDone ? 'text-emerald-500/50 line-through' : 'text-slate-400';
                 
                 return `
-                <div class="bg-slate-900 border ${isDone ? 'border-emerald-500/30 bg-emerald-950/10' : 'border-slate-800 hover:border-slate-700'} rounded-xl p-4 flex items-center justify-between transition group ${opacityClass}">
+                <div class="bg-slate-900 border ${isDone ? 'border-emerald-500/30 bg-emerald-950/10' : 'border-slate-800'} rounded-xl p-4 flex items-center justify-between transition group ${opacityClass}">
                     <div class="flex items-center space-x-3">
                         <input type="checkbox" onchange="toggleDailyTask('${type}', ${idx})" ${isDone ? 'checked' : ''} class="task-checkbox h-5 w-5 rounded border-slate-700 bg-slate-800 appearance-none outline-none transition cursor-pointer">
                         <div>
@@ -367,7 +371,7 @@
                     </div>
                     <div class="flex items-center space-x-3">
                         <span class="text-xs px-2.5 py-1 border rounded-lg font-medium ${tagClass}">${isSkippedInRecovery ? 'Skip' : task.tag}</span>
-                        <button onclick="removeDailyTask('${type}', ${idx})" class="text-slate-500 hover:text-red-400 opacity-0 group-hover:opacity-100 transition">×</button>
+                        <button onclick="removeDailyTask('${type}', ${idx})" class="text-slate-500 hover:text-rose-500 transition text-2xl px-2 leading-none">×</button>
                     </div>
                 </div>`;
             }).join('');
@@ -402,7 +406,7 @@
                     <div class="flex items-center space-x-2 group py-1">
                         <input type="checkbox" onchange="toggleWeeklyGoal('${type}', ${idx})" ${g.done ? 'checked' : ''} class="task-checkbox h-4 w-4 shrink-0 rounded border-slate-700 bg-slate-800 appearance-none cursor-pointer">
                         <span class="text-sm ${g.done ? 'text-slate-500 line-through' : 'text-slate-300'} flex-1">${g.text}</span>
-                        <button onclick="removeWeeklyGoal('${type}', ${idx})" class="text-slate-600 hover:text-red-400 text-xs opacity-0 group-hover:opacity-100">×</button>
+                        <button onclick="removeWeeklyGoal('${type}', ${idx})" class="text-slate-500 hover:text-rose-500 transition text-2xl px-2 leading-none">×</button>
                     </div>
                 `).join('');
             });
@@ -439,7 +443,7 @@
                     <div class="flex items-start space-x-2 mb-2 group">
                         <input type="checkbox" onchange="toggleDayTask('${day}', ${idx})" ${t.done ? 'checked' : ''} class="task-checkbox mt-0.5 h-3.5 w-3.5 shrink-0 rounded border-slate-700 bg-slate-800 appearance-none cursor-pointer">
                         <span class="text-xs ${t.done ? 'text-slate-500 line-through' : 'text-slate-300'} flex-1 break-words">${t.text}</span>
-                        <button onclick="removeDayTask('${day}', ${idx})" class="text-slate-600 hover:text-red-400 text-xs opacity-0 group-hover:opacity-100">×</button>
+                        <button onclick="removeDayTask('${day}', ${idx})" class="text-slate-500 hover:text-rose-500 transition text-2xl px-2 leading-none">×</button>
                     </div>
                 `).join('');
                 
@@ -498,7 +502,7 @@
                     <div class="flex items-center space-x-2 group py-0.5">
                         <input type="checkbox" onchange="toggleSubtopic('${sub}', ${idx})" ${st.done ? 'checked' : ''} class="task-checkbox h-3.5 w-3.5 shrink-0 rounded border-slate-700 bg-slate-800 appearance-none cursor-pointer">
                         <span class="text-xs ${st.done ? 'text-slate-500 line-through' : 'text-slate-300'} flex-1">${st.text}</span>
-                        <button onclick="removeSubtopic('${sub}', ${idx})" class="text-slate-600 hover:text-red-400 text-xs opacity-0 group-hover:opacity-100">×</button>
+                        <button onclick="removeSubtopic('${sub}', ${idx})" class="text-slate-500 hover:text-rose-500 transition text-2xl px-2 leading-none">×</button>
                     </div>
                 `).join('');
 
@@ -558,7 +562,7 @@
                         <input type="checkbox" onchange="toggleHYT(${idx})" ${h.done ? 'checked' : ''} class="task-checkbox h-5 w-5 rounded border-slate-600 bg-slate-700 appearance-none cursor-pointer">
                         <span class="text-sm font-medium ${h.done ? 'text-slate-500 line-through' : 'text-slate-200'}">${h.text}</span>
                     </div>
-                    <button onclick="removeHYT(${idx})" class="text-slate-500 hover:text-red-400 opacity-0 group-hover:opacity-100 transition">×</button>
+                    <button onclick="removeHYT(${idx})" class="text-slate-500 hover:text-rose-500 transition text-2xl px-2 leading-none">×</button>
                 </div>
             `).join('');
         }
