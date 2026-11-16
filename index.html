@@ -197,19 +197,14 @@
                 <div class="flex items-center justify-between">
                     <h2 class="text-lg font-bold">Monthly Goals & Macro Phases</h2>
                 </div>
-                <div class="bg-gradient-to-r from-indigo-900/40 to-slate-900 border border-indigo-500/30 rounded-2xl p-5 space-y-3 mb-6 shadow-xl">
-                    <h3 class="font-bold text-sm text-indigo-300 uppercase tracking-wider border-b border-indigo-500/20 pb-2">Current Month's BTR Modules</h3>
-                    <div class="flex flex-col space-y-2 pt-1">
-                        <label class="flex items-center space-x-3 cursor-pointer">
-                            <input id="mG1C" onchange="saveMonthlyData()" type="checkbox" class="task-checkbox h-5 w-5 rounded border-slate-700 bg-slate-800 text-indigo-600 focus:ring-indigo-500">
-                            <input id="mG1T" oninput="saveMonthlyData()" type="text" placeholder="Type a monthly goal" class="flex-1 bg-transparent border-none text-sm text-white focus:outline-none focus:ring-0">
-                        </label>
-                        <label class="flex items-center space-x-3 cursor-pointer">
-                            <input id="mG2C" onchange="saveMonthlyData()" type="checkbox" class="task-checkbox h-5 w-5 rounded border-slate-700 bg-slate-800 text-indigo-600 focus:ring-indigo-500">
-                            <input id="mG2T" oninput="saveMonthlyData()" type="text" placeholder="Type a monthly goal" class="flex-1 bg-transparent border-none text-sm text-white focus:outline-none focus:ring-0">
-                        </label>
-                    </div>
-                </div>
+                <div class="bg-gradient-to-r from-indigo-900/40 to-slate-900 border border-indigo-500/30 rounded-2xl p-5 shadow-xl mb-6">
+    <h3 class="font-bold text-sm text-indigo-300 uppercase tracking-wider border-b border-indigo-500/20 pb-2 mb-4">Current Month's BTR Modules</h3>
+    <div class="flex space-x-2 mb-4">
+        <input type="text" id="monthlyInput" placeholder="Add a monthly target..." class="flex-1 bg-slate-900/80 border border-slate-700 rounded-xl px-4 py-3 text-sm text-slate-200 focus:outline-none focus:border-indigo-500">
+        <button onclick="addMonthlyClick()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-5 py-3 rounded-xl font-bold transition">+</button>
+    </div>
+    <div id="monthlyList" class="space-y-2"></div>
+</div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div onclick="selectPhase(1)" id="phaseCard-1" class="bg-slate-900 border-2 border-indigo-500 rounded-2xl p-5 space-y-3 cursor-pointer transition shadow-xl"><h3 class="font-bold text-base">Phase 1</h3></div>
                     <div onclick="selectPhase(2)" id="phaseCard-2" class="bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-2xl p-5 space-y-3 cursor-pointer transition shadow-xl"><h3 class="font-bold text-base">Phase 2</h3></div>
@@ -550,19 +545,39 @@
                 </div>
             `).join('');
         }
+// --- MONTHLY DYNAMIC LIST ---
+let monthlyGoalsData = JSON.parse(localStorage.getItem('medPrepMonthlyDyn')) || [];
 
-        function saveMonthlyData() {
-            localStorage.setItem('medPrepMonthly', JSON.stringify({ mG1C: document.getElementById('mG1C').checked, mG1T: document.getElementById('mG1T').value, mG2C: document.getElementById('mG2C').checked, mG2T: document.getElementById('mG2T').value }));
-        }
-        function loadMonthlyData() {
-            const mData = JSON.parse(localStorage.getItem('medPrepMonthly'));
-            if (mData) {
-                if(document.getElementById('mG1C')) document.getElementById('mG1C').checked = mData.mG1C || false;
-                if(document.getElementById('mG1T')) document.getElementById('mG1T').value = mData.mG1T || '';
-                if(document.getElementById('mG2C')) document.getElementById('mG2C').checked = mData.mG2C || false;
-                if(document.getElementById('mG2T')) document.getElementById('mG2T').value = mData.mG2T || '';
-            }
-        }
+function addMonthlyClick() {
+    const input = document.getElementById('monthlyInput');
+    if (input.value.trim() !== '') {
+        monthlyGoalsData.push({ text: input.value, done: false });
+        localStorage.setItem('medPrepMonthlyDyn', JSON.stringify(monthlyGoalsData));
+        input.value = '';
+        renderMonthly();
+    }
+}
+function toggleMonthly(idx) {
+    monthlyGoalsData[idx].done = !monthlyGoalsData[idx].done;
+    localStorage.setItem('medPrepMonthlyDyn', JSON.stringify(monthlyGoalsData));
+    renderMonthly();
+}
+function removeMonthly(idx) {
+    monthlyGoalsData.splice(idx, 1);
+    localStorage.setItem('medPrepMonthlyDyn', JSON.stringify(monthlyGoalsData));
+    renderMonthly();
+}
+function renderMonthly() {
+    document.getElementById('monthlyList').innerHTML = monthlyGoalsData.map((m, idx) => `
+        <div class="bg-slate-800/50 border border-slate-700 rounded-xl p-3 flex items-center justify-between group">
+            <div class="flex items-center space-x-3">
+                <input type="checkbox" onchange="toggleMonthly(${idx})" ${m.done ? 'checked' : ''} class="task-checkbox h-5 w-5 rounded border-slate-600 bg-slate-700 appearance-none cursor-pointer">
+                <span class="text-sm font-medium ${m.done ? 'text-slate-500 line-through' : 'text-slate-200'}">${m.text}</span>
+            </div>
+            <button onclick="removeMonthly(${idx})" class="text-slate-500 hover:text-rose-500 transition text-2xl px-2 leading-none">×</button>
+        </div>
+    `).join('');
+}
 
         const phaseDetails = {
             1: { title: "Phase 1: Consolidation First Pass (Current -> Feb '27)", desc: "Focus on Major Clinical subjects paired with Pre-clinical links. Core BTR Modules, dual Q-banks, and active recall. GT Frequency: Evry 15 Days." },
@@ -603,6 +618,7 @@
         renderHYT();
         loadMonthlyData(); 
         selectPhase(1);
+        renderMonthly();
     </script>
 
     <!-- SCRIPT 2: Firebase Live Buddy Logic (Untouched Architecture) -->
