@@ -275,14 +275,24 @@
         let streak = parseInt(localStorage.getItem('medPrepStreak')) || 0;
         let activeDates = JSON.parse(localStorage.getItem('medPrepActiveDates')) || [];
 
-        if (lastLogin !== todayStr) {
+                if (lastLogin !== todayStr) {
             dailyTicks = {}; 
             localStorage.setItem('medPrepDailyTicks', JSON.stringify(dailyTicks));
+            
             if (lastLogin) {
-                const diffTime = Math.abs(new Date(todayStr) - new Date(lastLogin));
-                const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
-                streak = (diffDays === 1) ? streak + 1 : 1;
-            } else { streak = 1; }
+                const lastDate = new Date(lastLogin);
+                const currentDate = new Date(todayStr); // Normalizes today to midnight
+                const diffTime = Math.abs(currentDate - lastDate);
+                const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24)); // Uses round instead of ceil
+                
+                if (diffDays === 1) {
+                    streak++;
+                } else {
+                    streak = 1;
+                }
+            } else {
+                streak = 1;
+            }
             localStorage.setItem('medPrepStreak', streak);
             localStorage.setItem('medPrepLastDate', todayStr);
         }
